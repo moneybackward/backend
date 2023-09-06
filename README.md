@@ -1,8 +1,18 @@
-# README
+# Money Backward - Backend
+This is money backward backend.
+> :information_source: See `learn` folder to see the learning progress.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Prerequisites
+1. Ruby
+2. Rails
 
+## How to Run
+1. Run the server
+    ```
+    rails server
+    ```
+
+## Other
 Things you may want to cover:
 
 * Ruby version
