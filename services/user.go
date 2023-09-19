@@ -1,11 +1,43 @@
 package services
 
-import "github.com/moneybackward/backend/models"
+import (
+	"log"
+	"sync"
 
-func CreateUser(input models.CreateUserInput) models.User {
-	// TODO: hash password
-	user := models.User{Email: input.Email, Password: input.Password}
-	models.DB.Create(&user)
+	"github.com/moneybackward/backend/models/dao"
+	"github.com/moneybackward/backend/models/dto"
+	"github.com/moneybackward/backend/repositories"
+)
 
-	return user
+type UserService interface {
+	Create(user *dto.UserDTO) (*dao.UserDAO, error)
+	FindAll() ([]dao.UserDAO, error)
+}
+
+type userService struct {
+	userRepository repositories.UserRepository
+}
+
+var instance *userService
+var once sync.Once
+
+func NewUserService(userRepo repositories.UserRepository) UserService {
+	once.Do(func() {
+		instance = &userService{
+			userRepository: userRepo,
+		}
+	})
+	return instance
+}
+
+func (userSvc *userService) Create(user *dto.UserDTO) (*dao.UserDAO, error) {
+	userDao, err := user.ToUserEntity()
+	if err != nil {
+		log.Panic("Failed to convert user to DAO")
+	}
+	return userSvc.userRepository.Save(userDao)
+}
+
+func (u *userService) FindAll() ([]dao.UserDAO, error) {
+	return u.userRepository.FindAll()
 }
