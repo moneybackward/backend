@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/moneybackward/backend/models"
+	"github.com/moneybackward/backend/services"
 )
 
 func ListUsers(ctx *gin.Context) {
@@ -21,9 +22,7 @@ func CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	// TODO: hash password
-	user := models.User{Email: input.Email, Password: input.Password}
-	models.DB.Create(&user)
+	user := services.CreateUser(input)
 
 	ctx.JSON(http.StatusOK, gin.H{"data": user})
 }
