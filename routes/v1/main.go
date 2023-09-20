@@ -2,12 +2,11 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func RegisterV1Routes(router *gin.RouterGroup, db *gorm.DB) {
+func RegisterV1Routes(router *gin.RouterGroup) {
 	v1 := router.Group("/v1")
 	{
-		RegisterUserRoutes(v1, db)
+		RegisterUserRoutes(v1)
 	}
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dao"
 	"github.com/moneybackward/backend/models/dto"
+	"github.com/moneybackward/backend/repositories"
 	"github.com/moneybackward/backend/services"
 )
 
@@ -43,8 +44,11 @@ func (*userController) ListUsers(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": users})
 }
 
-func NewUserController(userSvc services.UserService) UserController {
+func NewUserController() UserController {
+	userRepository := repositories.NewUserRepository()
+	userService := services.NewUserService(userRepository)
+
 	return &userController{
-		userService: userSvc,
+		userService: userService,
 	}
 }

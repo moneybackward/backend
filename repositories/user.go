@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dao"
 	"gorm.io/gorm"
 )
@@ -16,9 +17,9 @@ type userRepository struct {
 	DB *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) UserRepository {
+func NewUserRepository() UserRepository {
 	return &userRepository{
-		DB: db,
+		DB: models.DB,
 	}
 }
 

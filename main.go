@@ -30,8 +30,8 @@ func main() {
 
 	engine := gin.Default()
 
-	db := models.ConnectDB()
-	routes.RegisterRoutes(engine, db)
+	models.ConnectDB()
+	routes.RegisterRoutes(engine)
 
 	engine.Run(fmt.Sprintf(":%s", port))
 }
