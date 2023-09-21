@@ -9,42 +9,40 @@ import (
 	"github.com/moneybackward/backend/services"
 )
 
-type ExpenseNoteController interface {
+type NoteController interface {
 	List(ctx *gin.Context)
 	Add(ctx *gin.Context)
 }
 
-type expenseNoteController struct {
-	expenseNoteService services.ExpenseNoteService
+type noteController struct {
+	noteService services.NoteService
 }
 
-func (ctrl *expenseNoteController) Add(ctx *gin.Context) {
-	var input dto.ExpenseNoteDTO
+func (noteCtrl *noteController) Add(ctx *gin.Context) {
+	var input dto.NoteDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	expenseNote, err := ctrl.expenseNoteService.Create(&input)
+	Note, err := noteCtrl.noteService.Create(&input)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": expenseNote})
+	ctx.JSON(http.StatusOK, gin.H{"data": Note})
 }
 
-func (expenseNoteCtrl *expenseNoteController) List(ctx *gin.Context) {
-	expenseNotes, err := expenseNoteCtrl.expenseNoteService.FindAll()
+func (noteCtrl *noteController) List(ctx *gin.Context) {
+	Notes, err := noteCtrl.noteService.FindAll()
 	if err != nil {
 		log.Panic(err)
 	}
-	ctx.JSON(http.StatusOK, gin.H{"data": expenseNotes})
+	ctx.JSON(http.StatusOK, gin.H{"data": Notes})
 }
 
-func NewExpenseNoteController() ExpenseNoteController {
-	expenseNoteService := services.NewExpenseNoteService()
-
-	return &expenseNoteController{
-		expenseNoteService: expenseNoteService,
+func NewNoteController() NoteController {
+	return &noteController{
+		noteService: services.NewNoteService(),
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type ExpenseNoteDAO struct {
+type NoteDAO struct {
 	gorm.Model
 	Name   string `json:"name"`
 	UserId int    `json:"user_id"`
