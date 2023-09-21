@@ -8,7 +8,7 @@ type UserDTO struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func (dto *UserDTO) ToUserEntity() (*dao.UserDAO, error) {
+func (dto *UserDTO) ToDAO() (*dao.UserDAO, error) {
 	u := &dao.UserDAO{
 		Name:     dto.Name,
 		Email:    dto.Email,

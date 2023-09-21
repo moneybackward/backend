@@ -18,20 +18,20 @@ type userService struct {
 	userRepository repositories.UserRepository
 }
 
-var instance *userService
-var once sync.Once
+var userServiceInstance *userService
+var userOnce sync.Once
 
-func NewUserService(userRepo repositories.UserRepository) UserService {
-	once.Do(func() {
-		instance = &userService{
-			userRepository: userRepo,
+func NewUserService() UserService {
+	userOnce.Do(func() {
+		userServiceInstance = &userService{
+			userRepository: repositories.NewUserRepository(),
 		}
 	})
-	return instance
+	return userServiceInstance
 }
 
 func (userSvc *userService) Create(user *dto.UserDTO) (*dao.UserDAO, error) {
-	userDao, err := user.ToUserEntity()
+	userDao, err := user.ToDAO()
 	if err != nil {
 		log.Panic("Failed to convert user to DAO")
 	}

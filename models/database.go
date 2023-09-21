@@ -14,7 +14,10 @@ func ConnectDB() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	err = db.AutoMigrate(&dao.UserDAO{})
+	err = db.AutoMigrate(
+		&dao.UserDAO{},
+		&dao.ExpenseNoteDAO{},
+	)
 	if err != nil {
 		panic("failed to migrate database")
 	}

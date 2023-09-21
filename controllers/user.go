@@ -5,10 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/moneybackward/backend/models"
-	"github.com/moneybackward/backend/models/dao"
 	"github.com/moneybackward/backend/models/dto"
-	"github.com/moneybackward/backend/repositories"
 	"github.com/moneybackward/backend/services"
 )
 
@@ -37,16 +34,16 @@ func (ctrl *userController) AddUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": user})
 }
 
-func (*userController) ListUsers(ctx *gin.Context) {
-	var users []dao.UserDAO
-	models.DB.Find(&users)
-
+func (userCtrl *userController) ListUsers(ctx *gin.Context) {
+	users, err := userCtrl.userService.FindAll()
+	if err != nil {
+		log.Panic(err)
+	}
 	ctx.JSON(http.StatusOK, gin.H{"data": users})
 }
 
 func NewUserController() UserController {
-	userRepository := repositories.NewUserRepository()
-	userService := services.NewUserService(userRepository)
+	userService := services.NewUserService()
 
 	return &userController{
 		userService: userService,

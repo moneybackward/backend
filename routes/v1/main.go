@@ -8,5 +8,6 @@ func RegisterV1Routes(router *gin.RouterGroup) {
 	v1 := router.Group("/v1")
 	{
 		RegisterUserRoutes(v1)
+		RegisterExpenseNoteRoutes(v1)
 	}
 }
