@@ -4,6 +4,7 @@ import (
 	"log"
 	"sync"
 
+	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
@@ -12,6 +13,7 @@ import (
 type UserService interface {
 	Create(user *dto.UserDTO) (*models.User, error)
 	FindAll() ([]models.User, error)
+	Find(userId uuid.UUID) (*models.User, error)
 }
 
 type userService struct {
@@ -38,6 +40,10 @@ func (userSvc *userService) Create(user *dto.UserDTO) (*models.User, error) {
 	return userSvc.userRepository.Save(usermodels)
 }
 
-func (u *userService) FindAll() ([]models.User, error) {
-	return u.userRepository.FindAll()
+func (userSvc *userService) FindAll() ([]models.User, error) {
+	return userSvc.userRepository.FindAll()
+}
+
+func (userSvc *userService) Find(userId uuid.UUID) (*models.User, error) {
+	return userSvc.userRepository.Find(userId)
 }

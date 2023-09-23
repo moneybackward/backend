@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models"
 	"gorm.io/gorm"
 )
@@ -8,6 +9,7 @@ import (
 type UserRepository interface {
 	Save(user *models.User) (*models.User, error)
 	FindAll() ([]models.User, error)
+	Find(userId uuid.UUID) (*models.User, error)
 	Delete(user *models.User) error
 }
 
@@ -30,6 +32,12 @@ func (u *userRepository) FindAll() ([]models.User, error) {
 	var users []models.User
 	err := u.DB.Find(&users).Error
 	return users, err
+}
+
+func (u *userRepository) Find(userId uuid.UUID) (*models.User, error) {
+	var user models.User
+	err := u.DB.Where("id = ?", userId).First(&user).Error
+	return &user, err
 }
 
 func (u *userRepository) Delete(user *models.User) error {

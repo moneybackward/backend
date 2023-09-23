@@ -1,0 +1,16 @@
+# docker-compose.yml
+version: '1'
+
+services:
+  db:
+    container_name: moneybackward-db
+    image: postgres:9.6
+    restart: always
+    environment:
+      POSTGRES_DB: moneybackward
+      POSTGRES_USER: moneybackward
+      POSTGRES_PASSWORD: pass-word
+    ports:
+      - 5432:5432
+    volumes:
+      - ../db/postgres-data:/var/lib/postgresql/data

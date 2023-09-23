@@ -1,10 +1,13 @@
 package dto
 
-import "github.com/moneybackward/backend/models"
+import (
+	"github.com/google/uuid"
+	"github.com/moneybackward/backend/models"
+)
 
 type NoteDTO struct {
-	Name   string `json:"name" binding:"required"`
-	UserId int    `json:"user_id" binding:"required"`
+	Name   string    `json:"name" binding:"required"`
+	UserId uuid.UUID `json:"user_id" binding:"required"`
 }
 
 func (dto *NoteDTO) ToEntity() (*models.Note, error) {

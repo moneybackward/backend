@@ -16,6 +16,14 @@ type NoteController interface {
 
 type noteController struct {
 	noteService services.NoteService
+	userService services.UserService
+}
+
+func NewNoteController() NoteController {
+	return &noteController{
+		noteService: services.NewNoteService(),
+		userService: services.NewUserService(),
+	}
 }
 
 func (noteCtrl *noteController) Add(ctx *gin.Context) {
@@ -25,24 +33,23 @@ func (noteCtrl *noteController) Add(ctx *gin.Context) {
 		return
 	}
 
-	Note, err := noteCtrl.noteService.Create(&input)
+	if _, err := noteCtrl.userService.Find(input.UserId); err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error(), "message": "User not found"})
+		return
+	}
+
+	note, err := noteCtrl.noteService.Create(&input)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": Note})
+	ctx.JSON(http.StatusOK, gin.H{"data": note})
 }
 
 func (noteCtrl *noteController) List(ctx *gin.Context) {
-	Notes, err := noteCtrl.noteService.FindAll()
+	notes, err := noteCtrl.noteService.FindAll()
 	if err != nil {
 		log.Panic(err)
 	}
-	ctx.JSON(http.StatusOK, gin.H{"data": Notes})
-}
-
-func NewNoteController() NoteController {
-	return &noteController{
-		noteService: services.NewNoteService(),
-	}
+	ctx.JSON(http.StatusOK, gin.H{"data": notes})
 }
