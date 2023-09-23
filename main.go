@@ -13,7 +13,10 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
+	dotenvErr := godotenv.Load()
+	if dotenvErr != nil {
+		log.Fatal("Error loading .env file")
+	}
 	port, portExists := os.LookupEnv("BACKEND_PORT")
 	if !portExists {
 		port = "8080"
@@ -24,14 +27,13 @@ func main() {
 	}
 	log.Printf("Running in %s mode", mode)
 
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	engine := gin.Default()
 
 	models.ConnectDB()
 	routes.RegisterRoutes(engine)
 
-	engine.Run(fmt.Sprintf(":%s", port))
+	engineErr := engine.Run(fmt.Sprintf(":%s", port))
+	if engineErr != nil {
+		log.Fatal(engineErr)
+	}
 }
