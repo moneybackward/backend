@@ -4,14 +4,14 @@ import (
 	"log"
 	"sync"
 
-	"github.com/moneybackward/backend/models/dao"
+	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
 )
 
 type UserService interface {
-	Create(user *dto.UserDTO) (*dao.UserDAO, error)
-	FindAll() ([]dao.UserDAO, error)
+	Create(user *dto.UserDTO) (*models.User, error)
+	FindAll() ([]models.User, error)
 }
 
 type userService struct {
@@ -30,14 +30,14 @@ func NewUserService() UserService {
 	return userServiceInstance
 }
 
-func (userSvc *userService) Create(user *dto.UserDTO) (*dao.UserDAO, error) {
-	userDao, err := user.ToDAO()
+func (userSvc *userService) Create(user *dto.UserDTO) (*models.User, error) {
+	usermodels, err := user.ToEntity()
 	if err != nil {
-		log.Panic("Failed to convert user to DAO")
+		log.Panic("Failed to convert user to ")
 	}
-	return userSvc.userRepository.Save(userDao)
+	return userSvc.userRepository.Save(usermodels)
 }
 
-func (u *userService) FindAll() ([]dao.UserDAO, error) {
+func (u *userService) FindAll() ([]models.User, error) {
 	return u.userRepository.FindAll()
 }

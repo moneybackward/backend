@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/moneybackward/backend/models/dao"
+import "github.com/moneybackward/backend/models"
 
 type UserDTO struct {
 	Name     string `json:"name" binding:"required"`
@@ -8,8 +8,8 @@ type UserDTO struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func (dto *UserDTO) ToDAO() (*dao.UserDAO, error) {
-	u := &dao.UserDAO{
+func (dto *UserDTO) ToEntity() (*models.User, error) {
+	u := &models.User{
 		Name:     dto.Name,
 		Email:    dto.Email,
 		Password: dto.Password,

@@ -2,15 +2,13 @@ package repositories
 
 import (
 	"github.com/moneybackward/backend/models"
-	"github.com/moneybackward/backend/models/dao"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
-	Save(user *dao.UserDAO) (*dao.UserDAO, error)
-	FindAll() ([]dao.UserDAO, error)
-	Delete(user *dao.UserDAO) error
-	Migrate() error
+	Save(user *models.User) (*models.User, error)
+	FindAll() ([]models.User, error)
+	Delete(user *models.User) error
 }
 
 type userRepository struct {
@@ -23,21 +21,17 @@ func NewUserRepository() UserRepository {
 	}
 }
 
-func (u *userRepository) Save(user *dao.UserDAO) (*dao.UserDAO, error) {
+func (u *userRepository) Save(user *models.User) (*models.User, error) {
 	u.DB.Create(&user)
 	return user, u.DB.Error
 }
 
-func (u *userRepository) FindAll() ([]dao.UserDAO, error) {
-	var users []dao.UserDAO
+func (u *userRepository) FindAll() ([]models.User, error) {
+	var users []models.User
 	err := u.DB.Find(&users).Error
 	return users, err
 }
 
-func (u *userRepository) Delete(user *dao.UserDAO) error {
+func (u *userRepository) Delete(user *models.User) error {
 	return u.DB.Delete(&user).Error
-}
-
-func (u *userRepository) Migrate() error {
-	return u.DB.AutoMigrate(&dao.UserDAO{})
 }

@@ -10,16 +10,23 @@ import (
 )
 
 type UserController interface {
-	ListUsers(ctx *gin.Context)
-	AddUser(ctx *gin.Context)
+	List(ctx *gin.Context)
+	Add(ctx *gin.Context)
 }
 
 type userController struct {
 	userService services.UserService
 }
 
-// AddUser implements UserController.
-func (ctrl *userController) AddUser(ctx *gin.Context) {
+func NewUserController() UserController {
+	userService := services.NewUserService()
+
+	return &userController{
+		userService: userService,
+	}
+}
+
+func (ctrl *userController) Add(ctx *gin.Context) {
 	var input dto.UserDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -34,18 +41,10 @@ func (ctrl *userController) AddUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": user})
 }
 
-func (userCtrl *userController) ListUsers(ctx *gin.Context) {
+func (userCtrl *userController) List(ctx *gin.Context) {
 	users, err := userCtrl.userService.FindAll()
 	if err != nil {
 		log.Panic(err)
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": users})
-}
-
-func NewUserController() UserController {
-	userService := services.NewUserService()
-
-	return &userController{
-		userService: userService,
-	}
 }

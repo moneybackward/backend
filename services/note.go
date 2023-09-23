@@ -4,16 +4,16 @@ import (
 	"log"
 	"sync"
 
-	"github.com/moneybackward/backend/models/dao"
+	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
 )
 
 type NoteService interface {
-	Create(note *dto.NoteDTO) (*dao.NoteDAO, error)
-	FindAll() ([]dao.NoteDAO, error)
-	FindUserNotes(userId int) ([]dao.NoteDAO, error)
-	Delete(note *dao.NoteDAO) error
+	Create(note *dto.NoteDTO) (*models.Note, error)
+	FindAll() ([]models.Note, error)
+	FindUserNotes(userId int) ([]models.Note, error)
+	Delete(note *models.Note) error
 }
 
 type noteService struct {
@@ -32,22 +32,22 @@ func NewNoteService() NoteService {
 	return noteServiceInstance
 }
 
-func (noteSvc *noteService) Create(Note *dto.NoteDTO) (*dao.NoteDAO, error) {
-	NoteDao, err := Note.ToEntity()
+func (noteSvc *noteService) Create(Note *dto.NoteDTO) (*models.Note, error) {
+	Notemodels, err := Note.ToEntity()
 	if err != nil {
-		log.Panic("Failed to convert Note to DAO")
+		log.Panic("Failed to convert Note to ")
 	}
-	return noteSvc.noteRepository.Save(NoteDao)
+	return noteSvc.noteRepository.Save(Notemodels)
 }
 
-func (noteSvc *noteService) FindAll() ([]dao.NoteDAO, error) {
+func (noteSvc *noteService) FindAll() ([]models.Note, error) {
 	return noteSvc.noteRepository.FindAll()
 }
 
-func (noteSvc *noteService) FindUserNotes(userId int) ([]dao.NoteDAO, error) {
+func (noteSvc *noteService) FindUserNotes(userId int) ([]models.Note, error) {
 	return noteSvc.noteRepository.FindUserNotes(userId)
 }
 
-func (noteSvc *noteService) Delete(note *dao.NoteDAO) error {
+func (noteSvc *noteService) Delete(note *models.Note) error {
 	return noteSvc.noteRepository.Delete(note)
 }

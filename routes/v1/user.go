@@ -9,7 +9,7 @@ func RegisterUserRoutes(router *gin.RouterGroup) {
 	userController := controllers.NewUserController()
 	users := router.Group("/users")
 	{
-		users.GET("", userController.ListUsers)
-		users.POST("", userController.AddUser)
+		users.GET("", userController.List)
+		users.POST("", userController.Add)
 	}
 }

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/moneybackward/backend/models/dao"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -15,8 +14,9 @@ func ConnectDB() *gorm.DB {
 	}
 
 	err = db.AutoMigrate(
-		&dao.UserDAO{},
-		&dao.NoteDAO{},
+		&User{},
+		&Note{},
+		&Category{},
 	)
 	if err != nil {
 		panic("failed to migrate database")

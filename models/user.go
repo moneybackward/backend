@@ -1,11 +1,7 @@
-package dao
+package models
 
-import (
-	"gorm.io/gorm"
-)
-
-type UserDAO struct {
-	gorm.Model
+type User struct {
+	Base
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
