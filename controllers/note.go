@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/services"
 )
@@ -12,6 +13,7 @@ import (
 type NoteController interface {
 	List(ctx *gin.Context)
 	Add(ctx *gin.Context)
+	Delete(ctx *gin.Context)
 }
 
 type noteController struct {
@@ -52,4 +54,14 @@ func (noteCtrl *noteController) List(ctx *gin.Context) {
 		log.Panic(err)
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": notes})
+}
+
+func (noteCtrl *noteController) Delete(ctx *gin.Context) {
+	noteId := uuid.MustParse(ctx.Param("id"))
+	err := noteCtrl.noteService.Delete(noteId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusNoContent, gin.H{})
 }

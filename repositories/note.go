@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models"
 	"gorm.io/gorm"
 )
@@ -9,7 +10,7 @@ type NoteRepository interface {
 	Save(Note *models.Note) (*models.Note, error)
 	FindAll() ([]models.Note, error)
 	FindUserNotes(userId int) ([]models.Note, error)
-	Delete(Note *models.Note) error
+	Delete(noteId uuid.UUID) error
 	Migrate() error
 }
 
@@ -40,8 +41,8 @@ func (noteRepo *noteRepository) FindUserNotes(userId int) ([]models.Note, error)
 	return notes, err
 }
 
-func (noteRepo *noteRepository) Delete(note *models.Note) error {
-	return noteRepo.DB.Delete(&note).Error
+func (noteRepo *noteRepository) Delete(noteId uuid.UUID) error {
+	return noteRepo.DB.Delete(&models.Note{}, noteId).Error
 }
 
 func (noteRepo *noteRepository) Migrate() error {

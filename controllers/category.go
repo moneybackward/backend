@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/services"
 )
@@ -11,6 +12,7 @@ import (
 type CategoryController interface {
 	List(ctx *gin.Context)
 	Add(ctx *gin.Context)
+	Delete(ctx *gin.Context)
 }
 
 type categoryController struct {
@@ -48,4 +50,14 @@ func (ctrl *categoryController) List(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": categories})
+}
+
+func (ctrl *categoryController) Delete(ctx *gin.Context) {
+	categoryId := uuid.MustParse(ctx.Param("id"))
+	err := ctrl.categoryService.Delete(categoryId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusNoContent, gin.H{})
 }

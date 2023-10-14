@@ -14,6 +14,7 @@ type UserService interface {
 	Create(user *dto.UserDTO) (*models.User, error)
 	FindAll() ([]models.User, error)
 	Find(userId uuid.UUID) (*models.User, error)
+	Delete(userId uuid.UUID) error
 }
 
 type userService struct {
@@ -46,4 +47,8 @@ func (userSvc *userService) FindAll() ([]models.User, error) {
 
 func (userSvc *userService) Find(userId uuid.UUID) (*models.User, error) {
 	return userSvc.userRepository.Find(userId)
+}
+
+func (userSvc *userService) Delete(userId uuid.UUID) error {
+	return userSvc.userRepository.Delete(userId)
 }

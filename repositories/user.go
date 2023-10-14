@@ -10,7 +10,7 @@ type UserRepository interface {
 	Save(user *models.User) (*models.User, error)
 	FindAll() ([]models.User, error)
 	Find(userId uuid.UUID) (*models.User, error)
-	Delete(user *models.User) error
+	Delete(userId uuid.UUID) error
 }
 
 type userRepository struct {
@@ -34,12 +34,12 @@ func (u *userRepository) FindAll() ([]models.User, error) {
 	return users, err
 }
 
-func (u *userRepository) Find(userId uuid.UUID) (*models.User, error) {
+func (userRepo *userRepository) Find(userId uuid.UUID) (*models.User, error) {
 	var user models.User
-	err := u.DB.Where("id = ?", userId).First(&user).Error
+	err := userRepo.DB.Where("id = ?", userId).First(&user).Error
 	return &user, err
 }
 
-func (u *userRepository) Delete(user *models.User) error {
-	return u.DB.Delete(&user).Error
+func (userRepo *userRepository) Delete(userId uuid.UUID) error {
+	return userRepo.DB.Delete(&models.User{}, userId).Error
 }

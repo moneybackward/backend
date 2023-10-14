@@ -4,6 +4,7 @@ import (
 	"log"
 	"sync"
 
+	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
@@ -13,7 +14,7 @@ type NoteService interface {
 	Create(note *dto.NoteDTO) (*models.Note, error)
 	FindAll() ([]models.Note, error)
 	FindUserNotes(userId int) ([]models.Note, error)
-	Delete(note *models.Note) error
+	Delete(noteId uuid.UUID) error
 }
 
 type noteService struct {
@@ -48,6 +49,6 @@ func (noteSvc *noteService) FindUserNotes(userId int) ([]models.Note, error) {
 	return noteSvc.noteRepository.FindUserNotes(userId)
 }
 
-func (noteSvc *noteService) Delete(note *models.Note) error {
-	return noteSvc.noteRepository.Delete(note)
+func (noteSvc *noteService) Delete(noteId uuid.UUID) error {
+	return noteSvc.noteRepository.Delete(noteId)
 }

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/services"
 )
@@ -12,6 +13,7 @@ import (
 type UserController interface {
 	List(ctx *gin.Context)
 	Add(ctx *gin.Context)
+	Delete(ctx *gin.Context)
 }
 
 type userController struct {
@@ -47,4 +49,14 @@ func (userCtrl *userController) List(ctx *gin.Context) {
 		log.Panic(err)
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": users})
+}
+
+func (userCtrl *userController) Delete(ctx *gin.Context) {
+	userId := uuid.MustParse(ctx.Param("id"))
+	err := userCtrl.userService.Delete(userId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusNoContent, gin.H{})
 }

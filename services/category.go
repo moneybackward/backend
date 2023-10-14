@@ -3,6 +3,7 @@ package services
 import (
 	"sync"
 
+	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
@@ -11,6 +12,7 @@ import (
 type CategoryService interface {
 	Create(category *dto.CategoryDTO) (*models.Category, error)
 	FindAll() ([]models.Category, error)
+	Delete(categoryId uuid.UUID) error
 }
 
 type categoryService struct {
@@ -37,6 +39,10 @@ func (categorySvc *categoryService) Create(category *dto.CategoryDTO) (*models.C
 	return categorySvc.categoryRepository.Save(categorymodels)
 }
 
-func (u *categoryService) FindAll() ([]models.Category, error) {
-	return u.categoryRepository.FindAll()
+func (categorySvc *categoryService) FindAll() ([]models.Category, error) {
+	return categorySvc.categoryRepository.FindAll()
+}
+
+func (categorySvc *categoryService) Delete(categoryId uuid.UUID) error {
+	return categorySvc.categoryRepository.Delete(categoryId)
 }

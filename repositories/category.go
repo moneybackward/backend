@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models"
 	"gorm.io/gorm"
 )
@@ -8,7 +9,7 @@ import (
 type CategoryRepository interface {
 	Save(category *models.Category) (*models.Category, error)
 	FindAll() ([]models.Category, error)
-	Delete(category *models.Category) error
+	Delete(categoryId uuid.UUID) error
 }
 
 type categoryRepository struct {
@@ -32,6 +33,6 @@ func (u *categoryRepository) FindAll() ([]models.Category, error) {
 	return categories, err
 }
 
-func (u *categoryRepository) Delete(category *models.Category) error {
-	return u.DB.Delete(&category).Error
+func (u *categoryRepository) Delete(categoryId uuid.UUID) error {
+	return u.DB.Delete(&models.Category{}, categoryId).Error
 }
