@@ -37,3 +37,5 @@ Client <=(Request/Response)=> Route <=(Request/Response)=> Controller <=(DTO)=> 
 2. Controller: handles the request and reply with response.
 3. Service: handles the input from `Controller` and do the business logic.
 4. Repository: read or write to database as called by the `Service`.
+
+:information_source: DB Schema can be seen in [here](https://dbdiagram.io/d/Money-Backward-652ac9bfffbf5169f0af735a)
