@@ -16,7 +16,7 @@ build: install
 
 build-and-run: build
 	${info ****** Building and running ******}
-	./$(BINARY_NAME)
+	./$(OUTPUT_DIR)/$(BINARY_NAME)
 
 dev:
 	${info ****** Running dev ******}
