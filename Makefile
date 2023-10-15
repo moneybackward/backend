@@ -1,10 +1,16 @@
 OUTPUT_DIR=out
+DOCS_DIR=docs
 BINARY_NAME=main
 
 clean:
 	${info ****** Cleaning ******}
 	go clean
 	rm -rf $(OUTPUT_DIR)
+
+gendocs:
+	${info ****** Generating docs ******}
+	rm -rf $(DOCS_DIR)
+	swag init
 
 install:
 	${info ****** Installing dependencies ******}

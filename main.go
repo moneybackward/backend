@@ -7,6 +7,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	docs "github.com/moneybackward/backend/docs"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/routes"
@@ -28,9 +31,12 @@ func main() {
 	log.Printf("Running in %s mode", mode)
 
 	engine := gin.Default()
+	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	models.ConnectDB()
 	routes.RegisterRoutes(engine)
+
+	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	engineErr := engine.Run(fmt.Sprintf(":%s", port))
 	if engineErr != nil {
