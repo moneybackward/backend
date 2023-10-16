@@ -28,6 +28,12 @@ func NewUserController() UserController {
 	}
 }
 
+// @Summary Add a user
+// @Tags users
+// @Accept json
+// @Param category body dto.UserDTO true "User"
+// @Success 201 {object} models.User
+// @Router /users [post]
 func (ctrl *userController) Add(ctx *gin.Context) {
 	var input dto.UserDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -43,6 +49,10 @@ func (ctrl *userController) Add(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": user})
 }
 
+// @Summary List users
+// @Tags users
+// @Success 200 {object} []models.User
+// @Router /users [get]
 func (userCtrl *userController) List(ctx *gin.Context) {
 	users, err := userCtrl.userService.FindAll()
 	if err != nil {
@@ -51,6 +61,9 @@ func (userCtrl *userController) List(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": users})
 }
 
+// @Summary Delete a user
+// @Tags users
+// @Success 204 {object} nil
 func (userCtrl *userController) Delete(ctx *gin.Context) {
 	userId := uuid.MustParse(ctx.Param("id"))
 	err := userCtrl.userService.Delete(userId)

@@ -8,6 +8,29 @@ definitions:
       priority:
         type: integer
     type: object
+  dto.NoteDTO:
+    properties:
+      name:
+        type: string
+      user_id:
+        type: string
+    required:
+    - name
+    - user_id
+    type: object
+  dto.UserDTO:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
   models.Category:
     properties:
       created_at:
@@ -94,4 +117,64 @@ paths:
       summary: Add a category
       tags:
       - categories
+  /notes:
+    get:
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/models.Note'
+            type: array
+      summary: List notes
+      tags:
+      - notes
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Note
+        in: body
+        name: note
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NoteDTO'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Note'
+      summary: Add a note
+      tags:
+      - notes
+  /users:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: List users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserDTO'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Add a user
+      tags:
+      - users
 swagger: "2.0"

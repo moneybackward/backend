@@ -28,6 +28,12 @@ func NewNoteController() NoteController {
 	}
 }
 
+// @Summary Add a note
+// @Tags notes
+// @Accept json
+// @Param note body dto.NoteDTO true "Note"
+// @Success 201 {object} models.Note
+// @Router /notes [post]
 func (noteCtrl *noteController) Add(ctx *gin.Context) {
 	var input dto.NoteDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -48,6 +54,10 @@ func (noteCtrl *noteController) Add(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": note})
 }
 
+// @Summary List notes
+// @Tags notes
+// @Success 201 {object} []models.Note
+// @Router /notes [get]
 func (noteCtrl *noteController) List(ctx *gin.Context) {
 	notes, err := noteCtrl.noteService.FindAll()
 	if err != nil {
@@ -56,6 +66,9 @@ func (noteCtrl *noteController) List(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": notes})
 }
 
+// @Summary Delete a category
+// @Tags categories
+// @Success 204 {object} nil
 func (noteCtrl *noteController) Delete(ctx *gin.Context) {
 	noteId := uuid.MustParse(ctx.Param("id"))
 	err := noteCtrl.noteService.Delete(noteId)
