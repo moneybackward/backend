@@ -18,6 +18,19 @@ definitions:
     - name
     - user_id
     type: object
+  dto.TransactionDTO:
+    properties:
+      amount:
+        type: integer
+      category_id:
+        type: integer
+      label:
+        type: string
+      note_id:
+        type: integer
+      timestamp:
+        type: string
+    type: object
   dto.UserDTO:
     properties:
       email:
@@ -67,6 +80,31 @@ definitions:
       user_id:
         type: string
     type: object
+  models.Transaction:
+    properties:
+      amount:
+        type: integer
+      category:
+        $ref: '#/definitions/models.Category'
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: string
+      label:
+        type: string
+      note:
+        $ref: '#/definitions/models.Note'
+      note_id:
+        type: integer
+      timestamp:
+        type: string
+      updated_at:
+        type: string
+    type: object
   models.User:
     properties:
       created_at:
@@ -87,36 +125,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /categories:
-    get:
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Category'
-            type: array
-      summary: List categories
-      tags:
-      - categories
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Category
-        in: body
-        name: category
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CategoryDTO'
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/models.Category'
-      summary: Add a category
-      tags:
-      - categories
   /notes:
     get:
       responses:
@@ -147,6 +155,66 @@ paths:
       summary: Add a note
       tags:
       - notes
+  /notes/:noteId/categories:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+      summary: List categories
+      tags:
+      - categories
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CategoryDTO'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Category'
+      summary: Add a category
+      tags:
+      - categories
+  /notes/{note_id}/transactions:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Transaction'
+            type: array
+      summary: List transactions
+      tags:
+      - transactions
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: transaction
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TransactionDTO'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Transaction'
+      summary: Add a transaction
+      tags:
+      - transactions
   /users:
     get:
       responses:

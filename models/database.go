@@ -59,6 +59,7 @@ func ConnectDB() *gorm.DB {
 		&User{},
 		&Note{},
 		&Category{},
+		&Transaction{},
 	)
 	if err != nil {
 		panic("failed to migrate database")

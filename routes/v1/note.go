@@ -8,6 +8,8 @@ import (
 func RegisterNoteRoutes(router *gin.RouterGroup) {
 	noteController := controllers.NewNoteController()
 	categoryController := controllers.NewCategoryController()
+	transactionController := controllers.NewTransactionController()
+
 	notes := router.Group("/notes")
 	{
 		notes.GET("", noteController.List)
@@ -15,5 +17,8 @@ func RegisterNoteRoutes(router *gin.RouterGroup) {
 
 		notes.GET("/:noteId/categories", categoryController.List)
 		notes.POST("/:noteId/categories", categoryController.Add)
+
+		notes.GET("/:noteId/transactions", transactionController.List)
+		notes.POST("/:noteId/transactions", transactionController.Add)
 	}
 }

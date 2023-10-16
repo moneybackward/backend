@@ -15,7 +15,54 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/categories": {
+        "/notes": {
+            "get": {
+                "tags": [
+                    "notes"
+                ],
+                "summary": "List notes",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Note"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notes"
+                ],
+                "summary": "Add a note",
+                "parameters": [
+                    {
+                        "description": "Note",
+                        "name": "note",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.NoteDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Note"
+                        }
+                    }
+                }
+            }
+        },
+        "/notes/:noteId/categories": {
             "get": {
                 "tags": [
                     "categories"
@@ -62,19 +109,19 @@ const docTemplate = `{
                 }
             }
         },
-        "/notes": {
+        "/notes/{note_id}/transactions": {
             "get": {
                 "tags": [
-                    "notes"
+                    "transactions"
                 ],
-                "summary": "List notes",
+                "summary": "List transactions",
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Note"
+                                "$ref": "#/definitions/models.Transaction"
                             }
                         }
                     }
@@ -85,17 +132,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "notes"
+                    "transactions"
                 ],
-                "summary": "Add a note",
+                "summary": "Add a transaction",
                 "parameters": [
                     {
-                        "description": "Note",
-                        "name": "note",
+                        "description": "transaction",
+                        "name": "transaction",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.NoteDTO"
+                            "$ref": "#/definitions/dto.TransactionDTO"
                         }
                     }
                 ],
@@ -103,7 +150,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Note"
+                            "$ref": "#/definitions/models.Transaction"
                         }
                     }
                 }
@@ -187,6 +234,26 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.TransactionDTO": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "note_id": {
+                    "type": "integer"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.UserDTO": {
             "type": "object",
             "required": [
@@ -257,6 +324,44 @@ const docTemplate = `{
                     "$ref": "#/definitions/models.User"
                 },
                 "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Transaction": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "category": {
+                    "$ref": "#/definitions/models.Category"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "note": {
+                    "$ref": "#/definitions/models.Note"
+                },
+                "note_id": {
+                    "type": "integer"
+                },
+                "timestamp": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }
