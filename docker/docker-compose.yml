@@ -4,7 +4,7 @@ version: '1'
 services:
   db:
     container_name: moneybackward-db
-    image: postgres:9.6
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_DB: moneybackward
@@ -13,4 +13,4 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ../ignore/postgres-data:/var/lib/postgresql/data
+      - ../ignore/_postgres-data:/var/lib/postgresql/data
