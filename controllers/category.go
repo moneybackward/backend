@@ -54,7 +54,8 @@ func (ctrl *categoryController) Add(ctx *gin.Context) {
 // @Success 200 {object} []models.Category
 // @Router /categories [get]
 func (ctrl *categoryController) List(ctx *gin.Context) {
-	categories, err := ctrl.categoryService.FindAll()
+	noteId := uuid.MustParse(ctx.Param("noteId"))
+	categories, err := ctrl.categoryService.FindAll(noteId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

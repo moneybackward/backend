@@ -8,7 +8,7 @@ import (
 
 type CategoryRepository interface {
 	Save(category *models.Category) (*models.Category, error)
-	FindAll() ([]models.Category, error)
+	FindAll(noteId uuid.UUID) ([]models.Category, error)
 	Delete(categoryId uuid.UUID) error
 }
 
@@ -27,9 +27,9 @@ func (u *categoryRepository) Save(category *models.Category) (*models.Category, 
 	return category, u.DB.Error
 }
 
-func (u *categoryRepository) FindAll() ([]models.Category, error) {
+func (u *categoryRepository) FindAll(noteId uuid.UUID) ([]models.Category, error) {
 	var categories []models.Category
-	err := u.DB.Find(&categories).Error
+	err := u.DB.Where("note_id = ?", noteId).Find(&categories).Error
 	return categories, err
 }
 

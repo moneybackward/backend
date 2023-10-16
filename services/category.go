@@ -11,7 +11,7 @@ import (
 
 type CategoryService interface {
 	Create(category *dto.CategoryDTO) (*models.Category, error)
-	FindAll() ([]models.Category, error)
+	FindAll(noteId uuid.UUID) ([]models.Category, error)
 	Delete(categoryId uuid.UUID) error
 }
 
@@ -39,8 +39,8 @@ func (categorySvc *categoryService) Create(category *dto.CategoryDTO) (*models.C
 	return categorySvc.categoryRepository.Save(categorymodels)
 }
 
-func (categorySvc *categoryService) FindAll() ([]models.Category, error) {
-	return categorySvc.categoryRepository.FindAll()
+func (categorySvc *categoryService) FindAll(noteId uuid.UUID) ([]models.Category, error) {
+	return categorySvc.categoryRepository.FindAll(noteId)
 }
 
 func (categorySvc *categoryService) Delete(categoryId uuid.UUID) error {

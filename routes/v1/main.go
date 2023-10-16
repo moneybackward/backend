@@ -9,6 +9,5 @@ func RegisterV1Routes(router *gin.RouterGroup) {
 	{
 		RegisterUserRoutes(v1)
 		RegisterNoteRoutes(v1)
-		RegisterCategoryRoutes(v1)
 	}
 }
