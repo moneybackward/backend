@@ -15,10 +15,10 @@ func RegisterNoteRoutes(router *gin.RouterGroup) {
 		notes.GET("", noteController.List)
 		notes.POST("", noteController.Add)
 
-		notes.GET("/:noteId/categories", categoryController.List)
-		notes.POST("/:noteId/categories", categoryController.Add)
+		notes.GET("/:note_id/categories", categoryController.List)
+		notes.POST("/:note_id/categories", categoryController.Add)
 
-		notes.GET("/:noteId/transactions", transactionController.List)
-		notes.POST("/:noteId/transactions", transactionController.Add)
+		notes.GET("/:note_id/transactions", transactionController.List)
+		notes.POST("/:note_id/transactions", transactionController.Add)
 	}
 }

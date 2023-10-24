@@ -58,11 +58,11 @@ func (noteCtrl *noteController) Add(ctx *gin.Context) {
 // @Tags notes
 // @Success 201 {object} []models.Note
 // @Router /notes [get]
-// @Param userId query string true "User ID"
+// @Param user_id query string true "User ID"
 func (noteCtrl *noteController) List(ctx *gin.Context) {
 	var userId uuid.UUID
-	if ctx.Query("userId") != "" {
-		userId = uuid.MustParse(ctx.Query("userId"))
+	if ctx.Query("user_id") != "" {
+		userId = uuid.MustParse(ctx.Query("user_id"))
 	}
 
 	notes, err := noteCtrl.noteService.FindAll(userId)

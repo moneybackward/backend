@@ -138,7 +138,7 @@ paths:
       parameters:
       - description: User ID
         in: query
-        name: userId
+        name: user_id
         required: true
         type: string
       responses:
@@ -169,8 +169,14 @@ paths:
       summary: Add a note
       tags:
       - notes
-  /notes/{note_id}/categories:
+  /notes/:note_id/categories:
     get:
+      parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
       responses:
         "200":
           description: OK
@@ -199,7 +205,7 @@ paths:
       summary: Add a category
       tags:
       - categories
-  /notes/{note_id}/transactions:
+  /notes/:note_id/transactions:
     get:
       responses:
         "200":

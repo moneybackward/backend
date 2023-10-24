@@ -25,7 +25,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "userId",
+                        "name": "user_id",
                         "in": "query",
                         "required": true
                     }
@@ -71,12 +71,21 @@ const docTemplate = `{
                 }
             }
         },
-        "/notes/{note_id}/categories": {
+        "/notes/:note_id/categories": {
             "get": {
                 "tags": [
                     "categories"
                 ],
                 "summary": "List categories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Note ID",
+                        "name": "note_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -118,7 +127,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/notes/{note_id}/transactions": {
+        "/notes/:note_id/transactions": {
             "get": {
                 "tags": [
                     "transactions"

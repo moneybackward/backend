@@ -32,7 +32,7 @@ func NewTransactionController() TransactionController {
 // @Accept json
 // @Param transaction body dto.TransactionDTO true "transaction"
 // @Success 201 {object} models.Transaction
-// @Router /notes/{note_id}/transactions [post]
+// @Router /notes/:note_id/transactions [post]
 func (ctrl *transactionController) Add(ctx *gin.Context) {
 	var input dto.TransactionDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -52,7 +52,7 @@ func (ctrl *transactionController) Add(ctx *gin.Context) {
 // @Summary List transactions
 // @Tags transactions
 // @Success 200 {object} []models.Transaction
-// @Router /notes/{note_id}/transactions [get]
+// @Router /notes/:note_id/transactions [get]
 func (ctrl *transactionController) List(ctx *gin.Context) {
 	noteId := uuid.MustParse(ctx.Param("noteId"))
 	transactions, err := ctrl.transactionService.FindAll(noteId)
