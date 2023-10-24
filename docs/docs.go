@@ -21,6 +21,15 @@ const docTemplate = `{
                     "notes"
                 ],
                 "summary": "List notes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -62,7 +71,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/notes/:noteId/categories": {
+        "/notes/{note_id}/categories": {
             "get": {
                 "tags": [
                     "categories"
@@ -208,6 +217,15 @@ const docTemplate = `{
         "dto.CategoryDTO": {
             "type": "object",
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -216,6 +234,9 @@ const docTemplate = `{
                 },
                 "priority": {
                     "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
                 }
             }
         },

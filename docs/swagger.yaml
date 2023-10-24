@@ -1,12 +1,20 @@
 definitions:
   dto.CategoryDTO:
     properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: string
       name:
         type: string
       note_id:
         type: integer
       priority:
         type: integer
+      updated_at:
+        type: string
     type: object
   dto.NoteDTO:
     properties:
@@ -127,6 +135,12 @@ info:
 paths:
   /notes:
     get:
+      parameters:
+      - description: User ID
+        in: query
+        name: userId
+        required: true
+        type: string
       responses:
         "201":
           description: Created
@@ -155,7 +169,7 @@ paths:
       summary: Add a note
       tags:
       - notes
-  /notes/:noteId/categories:
+  /notes/{note_id}/categories:
     get:
       responses:
         "200":

@@ -40,6 +40,7 @@ func (ctrl *userController) Add(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	// ! TODO: validate input, check if user already exists
 
 	user, err := ctrl.userService.Create(&input)
 	if err != nil {

@@ -4,7 +4,7 @@ version: '1'
 services:
   db:
     container_name: moneybackward-db
-    image: postgres:latest
+    image: postgres:alpine
     restart: always
     environment:
       POSTGRES_DB: moneybackward

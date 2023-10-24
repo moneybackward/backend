@@ -12,7 +12,7 @@ import (
 
 type NoteService interface {
 	Create(note *dto.NoteDTO) (*models.Note, error)
-	FindAll() ([]models.Note, error)
+	FindAll(userId uuid.UUID) ([]models.Note, error)
 	FindUserNotes(userId int) ([]models.Note, error)
 	Delete(noteId uuid.UUID) error
 }
@@ -41,8 +41,8 @@ func (noteSvc *noteService) Create(Note *dto.NoteDTO) (*models.Note, error) {
 	return noteSvc.noteRepository.Save(Notemodels)
 }
 
-func (noteSvc *noteService) FindAll() ([]models.Note, error) {
-	return noteSvc.noteRepository.FindAll()
+func (noteSvc *noteService) FindAll(userId uuid.UUID) ([]models.Note, error) {
+	return noteSvc.noteRepository.FindAll(userId)
 }
 
 func (noteSvc *noteService) FindUserNotes(userId int) ([]models.Note, error) {

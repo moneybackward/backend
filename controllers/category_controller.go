@@ -32,15 +32,15 @@ func NewCategoryController() CategoryController {
 // @Accept json
 // @Param category body dto.CategoryDTO true "Category"
 // @Success 201 {object} models.Category
-// @Router /notes/:noteId/categories [post]
+// @Router /notes/{note_id}/categories [post]
 func (ctrl *categoryController) Add(ctx *gin.Context) {
-	var input dto.CategoryDTO
+	var input dto.CategoryCreateDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	category, err := ctrl.categoryService.Create(&input)
+	category, err := ctrl.categoryService.Create(input)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -52,7 +52,7 @@ func (ctrl *categoryController) Add(ctx *gin.Context) {
 // @Summary List categories
 // @Tags categories
 // @Success 200 {object} []models.Category
-// @Router /notes/:noteId/categories [get]
+// @Router /notes/{note_id}/categories [get]
 func (ctrl *categoryController) List(ctx *gin.Context) {
 	noteId := uuid.MustParse(ctx.Param("noteId"))
 	categories, err := ctrl.categoryService.FindAll(noteId)

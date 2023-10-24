@@ -8,7 +8,7 @@ import (
 
 type NoteRepository interface {
 	Save(Note *models.Note) (*models.Note, error)
-	FindAll() ([]models.Note, error)
+	FindAll(userId uuid.UUID) ([]models.Note, error)
 	FindUserNotes(userId int) ([]models.Note, error)
 	Delete(noteId uuid.UUID) error
 	Migrate() error
@@ -29,9 +29,9 @@ func (noteRepo *noteRepository) Save(note *models.Note) (*models.Note, error) {
 	return note, noteRepo.DB.Error
 }
 
-func (noteRepo *noteRepository) FindAll() ([]models.Note, error) {
+func (noteRepo *noteRepository) FindAll(userId uuid.UUID) ([]models.Note, error) {
 	var notes []models.Note
-	err := noteRepo.DB.Find(&notes).Error
+	err := noteRepo.DB.Where("user_id = ?", userId).Find(&notes).Error
 	return notes, err
 }
 

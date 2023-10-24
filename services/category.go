@@ -4,14 +4,13 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
-	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
 )
 
 type CategoryService interface {
-	Create(category *dto.CategoryDTO) (*models.Category, error)
-	FindAll(noteId uuid.UUID) ([]models.Category, error)
+	Create(category dto.CategoryCreateDTO) (dto.CategoryDTO, error)
+	FindAll(noteId uuid.UUID) ([]dto.CategoryDTO, error)
 	Delete(categoryId uuid.UUID) error
 }
 
@@ -31,15 +30,11 @@ func NewCategoryService() CategoryService {
 	return categoryServiceInstance
 }
 
-func (categorySvc *categoryService) Create(category *dto.CategoryDTO) (*models.Category, error) {
-	categorymodels, err := category.ToEntity()
-	if err != nil {
-		return nil, err
-	}
-	return categorySvc.categoryRepository.Save(categorymodels)
+func (categorySvc *categoryService) Create(categoryCreateDto dto.CategoryCreateDTO) (dto.CategoryDTO, error) {
+	return categorySvc.categoryRepository.Save(categoryCreateDto)
 }
 
-func (categorySvc *categoryService) FindAll(noteId uuid.UUID) ([]models.Category, error) {
+func (categorySvc *categoryService) FindAll(noteId uuid.UUID) ([]dto.CategoryDTO, error) {
 	return categorySvc.categoryRepository.FindAll(noteId)
 }
 
