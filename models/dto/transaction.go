@@ -7,6 +7,7 @@ import (
 )
 
 type TransactionDTO struct {
+	BaseDTO
 	Label     string    `json:"label"`
 	Amount    int       `json:"amount"`
 	Timestamp time.Time `json:"timestamp"`
@@ -25,4 +26,15 @@ func (dto *TransactionDTO) ToEntity() (*models.Transaction, error) {
 	}
 
 	return u, nil
+}
+
+func (dto *TransactionDTO) FromEntity(transaction *models.Transaction) error {
+	dto.BaseDTO.FromEntity(&transaction.Base)
+	dto.Label = transaction.Label
+	dto.Amount = transaction.Amount
+	dto.NoteId = transaction.NoteId
+	dto.CategoryId = transaction.CategoryId
+	dto.Timestamp = transaction.Timestamp
+
+	return nil
 }

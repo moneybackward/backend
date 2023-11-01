@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	docs "github.com/moneybackward/backend/docs"
+	"github.com/moneybackward/backend/middlewares"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
@@ -31,6 +32,8 @@ func main() {
 	log.Printf("Running in %s mode", mode)
 
 	engine := gin.Default()
+	engine.Use(middlewares.ErrorMiddleware())
+
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	models.ConnectDB()

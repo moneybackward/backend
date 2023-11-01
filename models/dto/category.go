@@ -22,7 +22,7 @@ func (dto *CategoryCreateDTO) ToEntity() models.Category {
 }
 
 func (dto *CategoryDTO) FromEntity(category models.Category) {
-	dto.BaseDTO.FromEntity(category.Base)
+	dto.BaseDTO.FromEntity(&category.Base)
 	dto.Name = category.Name
 	dto.Priority = category.Priority
 	dto.NoteId = category.NoteId

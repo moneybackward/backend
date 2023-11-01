@@ -18,7 +18,15 @@ definitions:
     type: object
   dto.NoteDTO:
     properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: string
       name:
+        type: string
+      updated_at:
         type: string
       user_id:
         type: string
@@ -32,14 +40,22 @@ definitions:
         type: integer
       category_id:
         type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: string
       label:
         type: string
       note_id:
         type: integer
       timestamp:
         type: string
+      updated_at:
+        type: string
     type: object
-  dto.UserDTO:
+  dto.UserRegisterDTO:
     properties:
       email:
         type: string
@@ -47,10 +63,13 @@ definitions:
         type: string
       password:
         type: string
+      password_confirmation:
+        type: string
     required:
     - email
     - name
     - password
+    - password_confirmation
     type: object
   models.Category:
     properties:
@@ -256,7 +275,7 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/dto.UserDTO'
+          $ref: '#/definitions/dto.UserRegisterDTO'
       responses:
         "201":
           description: Created

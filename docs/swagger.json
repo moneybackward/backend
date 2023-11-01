@@ -196,7 +196,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserDTO"
+                            "$ref": "#/definitions/dto.UserRegisterDTO"
                         }
                     }
                 ],
@@ -245,7 +245,19 @@
                 "user_id"
             ],
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
                 "name": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 },
                 "user_id": {
@@ -262,6 +274,15 @@
                 "category_id": {
                     "type": "integer"
                 },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
                 "label": {
                     "type": "string"
                 },
@@ -270,15 +291,19 @@
                 },
                 "timestamp": {
                     "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
                 }
             }
         },
-        "dto.UserDTO": {
+        "dto.UserRegisterDTO": {
             "type": "object",
             "required": [
                 "email",
                 "name",
-                "password"
+                "password",
+                "password_confirmation"
             ],
             "properties": {
                 "email": {
@@ -288,6 +313,9 @@
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "password_confirmation": {
                     "type": "string"
                 }
             }

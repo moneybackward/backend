@@ -207,7 +207,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UserDTO"
+                            "$ref": "#/definitions/dto.UserRegisterDTO"
                         }
                     }
                 ],
@@ -256,7 +256,19 @@ const docTemplate = `{
                 "user_id"
             ],
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
                 "name": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 },
                 "user_id": {
@@ -273,6 +285,15 @@ const docTemplate = `{
                 "category_id": {
                     "type": "integer"
                 },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
                 "label": {
                     "type": "string"
                 },
@@ -281,15 +302,19 @@ const docTemplate = `{
                 },
                 "timestamp": {
                     "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
                 }
             }
         },
-        "dto.UserDTO": {
+        "dto.UserRegisterDTO": {
             "type": "object",
             "required": [
                 "email",
                 "name",
-                "password"
+                "password",
+                "password_confirmation"
             ],
             "properties": {
                 "email": {
@@ -299,6 +324,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "password_confirmation": {
                     "type": "string"
                 }
             }

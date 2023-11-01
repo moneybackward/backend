@@ -31,20 +31,20 @@ func NewUserController() UserController {
 // @Summary Add a user
 // @Tags users
 // @Accept json
-// @Param category body dto.UserDTO true "User"
+// @Param category body dto.UserRegisterDTO true "User"
 // @Success 201 {object} models.User
 // @Router /users [post]
 func (ctrl *userController) Add(ctx *gin.Context) {
-	var input dto.UserDTO
+	var input dto.UserRegisterDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.Error(err)
 		return
 	}
-	// ! TODO: validate input, check if user already exists
 
 	user, err := ctrl.userService.Create(&input)
 	if err != nil {
-		log.Panic(err)
+		ctx.Error(err)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"data": user})

@@ -6,6 +6,7 @@ import (
 )
 
 type NoteDTO struct {
+	BaseDTO
 	Name   string    `json:"name" binding:"required"`
 	UserId uuid.UUID `json:"user_id" binding:"required"`
 }
@@ -17,4 +18,12 @@ func (dto *NoteDTO) ToEntity() (*models.Note, error) {
 	}
 
 	return u, nil
+}
+
+func (dto *NoteDTO) FromEntity(note *models.Note) error {
+	dto.BaseDTO.FromEntity(&note.Base)
+	dto.Name = note.Name
+	dto.UserId = note.UserId
+
+	return nil
 }
