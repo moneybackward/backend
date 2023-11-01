@@ -16,6 +16,9 @@ import (
 	"github.com/moneybackward/backend/routes"
 )
 
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	dotenvErr := godotenv.Load()
 	if dotenvErr != nil {

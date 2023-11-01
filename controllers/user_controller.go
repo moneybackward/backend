@@ -12,7 +12,8 @@ import (
 
 type UserController interface {
 	List(ctx *gin.Context)
-	Add(ctx *gin.Context)
+	Register(ctx *gin.Context)
+	Login(ctx *gin.Context)
 	Delete(ctx *gin.Context)
 }
 
@@ -28,13 +29,13 @@ func NewUserController() UserController {
 	}
 }
 
-// @Summary Add a user
-// @Tags users
+// @Summary Register a user
+// @Tags auth
 // @Accept json
 // @Param category body dto.UserRegisterDTO true "User"
 // @Success 201 {object} models.User
-// @Router /users [post]
-func (ctrl *userController) Add(ctx *gin.Context) {
+// @Router /auth/register [post]
+func (ctrl *userController) Register(ctx *gin.Context) {
 	var input dto.UserRegisterDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.Error(err)
@@ -50,10 +51,33 @@ func (ctrl *userController) Add(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": user})
 }
 
+// @Summary Login a user
+// @Tags auth
+// @Accept json
+// @Param category body dto.UserLoginDTO true "User"
+// @Success 200 {object} nil
+// @Router /auth/login [post]
+func (userCtrl *userController) Login(ctx *gin.Context) {
+	var input dto.UserLoginDTO
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	token, err := userCtrl.userService.Login(&input)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": token})
+}
+
 // @Summary List users
 // @Tags users
 // @Success 200 {object} []models.User
 // @Router /users [get]
+// @Security BearerAuth
 func (userCtrl *userController) List(ctx *gin.Context) {
 	users, err := userCtrl.userService.FindAll()
 	if err != nil {

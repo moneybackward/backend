@@ -2,7 +2,8 @@ package dto
 
 import (
 	"github.com/moneybackward/backend/models"
-	"github.com/moneybackward/backend/utils"
+	"github.com/moneybackward/backend/utils/errors"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserDTO struct {
@@ -40,10 +41,9 @@ type UserRegisterDTO struct {
 
 func (dto *UserRegisterDTO) Validate() error {
 	if dto.Password != dto.PasswordConfirmation {
-		return &utils.ValidationError{
+		return &errors.ValidationError{
 			Message: "Password and password confirmation must match",
 		}
-
 	}
 
 	return nil
@@ -57,4 +57,13 @@ func (dto *UserRegisterDTO) ToEntity() (*models.User, error) {
 	}
 
 	return u, nil
+}
+
+func (dto *UserDTO) VerifyPassword(password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(dto.Password), []byte(password))
+}
+
+type UserLoginDTO struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }

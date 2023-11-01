@@ -7,13 +7,17 @@ import (
 	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
+	"github.com/moneybackward/backend/utils/errors"
+	"github.com/moneybackward/backend/utils/token"
 )
 
 type UserService interface {
 	Create(user *dto.UserRegisterDTO) (*dto.UserDTO, error)
 	FindAll() ([]dto.UserDTO, error)
 	Find(userId uuid.UUID) (*dto.UserDTO, error)
+	FindByEmail(email string) (*dto.UserDTO, error)
 	Delete(userId uuid.UUID) error
+	Login(user *dto.UserLoginDTO) (string, error)
 }
 
 type userService struct {
@@ -39,6 +43,12 @@ func (userSvc *userService) Create(user *dto.UserRegisterDTO) (*dto.UserDTO, err
 		return nil, err
 	}
 
+	existingUser, _ := userSvc.FindByEmail(user.Email)
+	if existingUser != nil {
+		slog.Warn("Email already exist")
+		return nil, &errors.ConflictError{Message: "Email already exist"}
+	}
+
 	usermodels, err := user.ToEntity()
 	if err != nil {
 		slog.Error("Failed to convert user to ")
@@ -56,6 +66,20 @@ func (userSvc *userService) Create(user *dto.UserRegisterDTO) (*dto.UserDTO, err
 		return nil, err
 	}
 	return createdUser, nil
+}
+
+func (userSvc *userService) FindByEmail(email string) (*dto.UserDTO, error) {
+	userModel, err := userSvc.userRepository.FindByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+	userDTO := &dto.UserDTO{}
+	err = userDTO.FromEntity(userModel)
+	if err != nil {
+		slog.Error("Failed to convert user to dto")
+		return nil, err
+	}
+	return userDTO, nil
 }
 
 func (userSvc *userService) FindAll() ([]dto.UserDTO, error) {
@@ -97,4 +121,32 @@ func (userSvc *userService) Find(userId uuid.UUID) (*dto.UserDTO, error) {
 
 func (userSvc *userService) Delete(userId uuid.UUID) error {
 	return userSvc.userRepository.Delete(userId)
+}
+
+func (userSvc *userService) Login(user *dto.UserLoginDTO) (string, error) {
+	userModel, err := userSvc.userRepository.FindByEmail(user.Email)
+	if err != nil {
+		return "", err
+	}
+
+	userDTO := &dto.UserDTO{}
+	err = userDTO.FromEntity(userModel)
+	if err != nil {
+		slog.Error("Failed to convert user to dto")
+		return "", err
+	}
+
+	err = userDTO.VerifyPassword(user.Password)
+	if err != nil {
+		slog.Error("Failed to verify password")
+		return "", &errors.UnauthorizedError{Message: "Invalid email or password"}
+	}
+
+	token, err := token.GenerateToken(userDTO.Id)
+	if err != nil {
+		slog.Error("Failed to generate token")
+		return "", err
+	}
+
+	return token, nil
 }

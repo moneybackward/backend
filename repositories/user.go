@@ -10,6 +10,7 @@ type UserRepository interface {
 	Save(user *models.User) (*models.User, error)
 	FindAll() ([]models.User, error)
 	Find(userId uuid.UUID) (*models.User, error)
+	FindByEmail(email string) (*models.User, error)
 	Delete(userId uuid.UUID) error
 }
 
@@ -37,6 +38,12 @@ func (u *userRepository) FindAll() ([]models.User, error) {
 func (userRepo *userRepository) Find(userId uuid.UUID) (*models.User, error) {
 	var user models.User
 	err := userRepo.DB.Where("id = ?", userId).First(&user).Error
+	return &user, err
+}
+
+func (userRepo *userRepository) FindByEmail(email string) (*models.User, error) {
+	var user models.User
+	err := userRepo.DB.Where("email = ?", email).First(&user).Error
 	return &user, err
 }
 

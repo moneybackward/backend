@@ -55,6 +55,16 @@ definitions:
       updated_at:
         type: string
     type: object
+  dto.UserLoginDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
   dto.UserRegisterDTO:
     properties:
       email:
@@ -152,6 +162,42 @@ definitions:
 info:
   contact: {}
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserLoginDTO'
+      responses:
+        "200":
+          description: OK
+      summary: Login a user
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserRegisterDTO'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Register a user
+      tags:
+      - auth
   /notes:
     get:
       parameters:
@@ -263,25 +309,14 @@ paths:
             items:
               $ref: '#/definitions/models.User'
             type: array
+      security:
+      - BearerAuth: []
       summary: List users
       tags:
       - users
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: User
-        in: body
-        name: category
-        required: true
-        schema:
-          $ref: '#/definitions/dto.UserRegisterDTO'
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/models.User'
-      summary: Add a user
-      tags:
-      - users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

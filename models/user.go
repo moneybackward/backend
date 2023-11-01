@@ -4,7 +4,6 @@ import (
 	"html"
 	"strings"
 
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -16,8 +15,7 @@ type User struct {
 	Password string `json:"password"`
 }
 
-func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-	u.Id = uuid.New()
+func (u *User) BeforeSave(tx *gorm.DB) (err error) {
 
 	// hash password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
