@@ -13,6 +13,13 @@ func JwtAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		u_id, err := token.ExtractTokenID(c)
+		if err != nil {
+			c.AbortWithStatusJSON(401, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.Set("userId", u_id)
 		c.Next()
 	}
 }

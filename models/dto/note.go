@@ -11,10 +11,22 @@ type NoteDTO struct {
 	UserId uuid.UUID `json:"user_id" binding:"required"`
 }
 
+type NoteCreateDTO struct {
+	Name string `json:"name" binding:"required"`
+}
+
 func (dto *NoteDTO) ToEntity() (*models.Note, error) {
 	u := &models.Note{
 		Name:   dto.Name,
 		UserId: dto.UserId,
+	}
+
+	return u, nil
+}
+
+func (dto *NoteCreateDTO) ToEntity() (*models.Note, error) {
+	u := &models.Note{
+		Name: dto.Name,
 	}
 
 	return u, nil

@@ -16,23 +16,12 @@ definitions:
       updated_at:
         type: string
     type: object
-  dto.NoteDTO:
+  dto.NoteCreateDTO:
     properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: string
       name:
-        type: string
-      updated_at:
-        type: string
-      user_id:
         type: string
     required:
     - name
-    - user_id
     type: object
   dto.TransactionDTO:
     properties:
@@ -200,12 +189,6 @@ paths:
       - auth
   /notes:
     get:
-      parameters:
-      - description: User ID
-        in: query
-        name: user_id
-        required: true
-        type: string
       responses:
         "201":
           description: Created
@@ -213,6 +196,8 @@ paths:
             items:
               $ref: '#/definitions/models.Note'
             type: array
+      security:
+      - BearerAuth: []
       summary: List notes
       tags:
       - notes
@@ -225,12 +210,14 @@ paths:
         name: note
         required: true
         schema:
-          $ref: '#/definitions/dto.NoteDTO'
+          $ref: '#/definitions/dto.NoteCreateDTO'
       responses:
         "201":
           description: Created
           schema:
             $ref: '#/definitions/models.Note'
+      security:
+      - BearerAuth: []
       summary: Add a note
       tags:
       - notes

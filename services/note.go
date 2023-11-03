@@ -11,9 +11,9 @@ import (
 )
 
 type NoteService interface {
-	Create(note *dto.NoteDTO) (*models.Note, error)
+	Create(userId uuid.UUID, note *dto.NoteCreateDTO) (*models.Note, error)
 	FindAll(userId uuid.UUID) ([]models.Note, error)
-	FindUserNotes(userId int) ([]models.Note, error)
+	FindUserNotes(userId uuid.UUID) ([]models.Note, error)
 	Delete(noteId uuid.UUID) error
 }
 
@@ -33,19 +33,20 @@ func NewNoteService() NoteService {
 	return noteServiceInstance
 }
 
-func (noteSvc *noteService) Create(Note *dto.NoteDTO) (*models.Note, error) {
-	Notemodels, err := Note.ToEntity()
+func (noteSvc *noteService) Create(userId uuid.UUID, note *dto.NoteCreateDTO) (*models.Note, error) {
+	notemodels, err := note.ToEntity()
+	notemodels.UserId = userId
 	if err != nil {
 		log.Panic("Failed to convert Note to ")
 	}
-	return noteSvc.noteRepository.Save(Notemodels)
+	return noteSvc.noteRepository.Save(notemodels)
 }
 
 func (noteSvc *noteService) FindAll(userId uuid.UUID) ([]models.Note, error) {
 	return noteSvc.noteRepository.FindAll(userId)
 }
 
-func (noteSvc *noteService) FindUserNotes(userId int) ([]models.Note, error) {
+func (noteSvc *noteService) FindUserNotes(userId uuid.UUID) ([]models.Note, error) {
 	return noteSvc.noteRepository.FindUserNotes(userId)
 }
 

@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	docs "github.com/moneybackward/backend/docs"
 	"github.com/moneybackward/backend/middlewares"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
@@ -21,8 +22,9 @@ import (
 // @name Authorization
 func main() {
 	dotenvErr := godotenv.Load()
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	if dotenvErr != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal().Msg("Error loading .env file")
 	}
 	port, portExists := os.LookupEnv("BACKEND_PORT")
 	if !portExists {
@@ -32,7 +34,7 @@ func main() {
 	if !modeExists {
 		mode = "dev"
 	}
-	log.Printf("Running in %s mode", mode)
+	log.Info().Msg("Running in " + mode + " mode")
 
 	engine := gin.Default()
 	engine.Use(middlewares.ErrorMiddleware())
@@ -46,6 +48,6 @@ func main() {
 
 	engineErr := engine.Run(fmt.Sprintf(":%s", port))
 	if engineErr != nil {
-		log.Fatal(engineErr)
+		log.Fatal().Msg("Error running engine" + engineErr.Error())
 	}
 }

@@ -22,7 +22,6 @@ func GenerateToken(user_id uuid.UUID) (string, error) {
 	}
 
 	claims := jwt.MapClaims{}
-	claims["authorized"] = true
 	claims["user_id"] = user_id
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(token_lifespan)).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -57,7 +56,7 @@ func ExtractToken(c *gin.Context) string {
 	return ""
 }
 
-func ExtractTokenID(c *gin.Context) (uint, error) {
+func ExtractTokenID(c *gin.Context) (uuid.UUID, error) {
 
 	tokenString := ExtractToken(c)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -67,15 +66,16 @@ func ExtractTokenID(c *gin.Context) (uint, error) {
 		return []byte(os.Getenv("SECRET")), nil
 	})
 	if err != nil {
-		return 0, err
+		return uuid.Nil, err
 	}
+
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-		uid, err := strconv.ParseUint(fmt.Sprintf("%.0f", claims["user_id"]), 10, 32)
+		u_id, err := uuid.Parse(claims["user_id"].(string))
 		if err != nil {
-			return 0, err
+			return uuid.Nil, err
 		}
-		return uint(uid), nil
+		return u_id, nil
 	}
-	return 0, nil
+	return uuid.Nil, nil
 }
