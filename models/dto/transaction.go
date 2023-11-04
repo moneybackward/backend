@@ -28,13 +28,11 @@ func (dto *TransactionDTO) ToEntity() (*models.Transaction, error) {
 	return u, nil
 }
 
-func (dto *TransactionDTO) FromEntity(transaction *models.Transaction) error {
+func (dto *TransactionDTO) FromEntity(transaction *models.Transaction) {
 	dto.BaseDTO.FromEntity(&transaction.Base)
 	dto.Label = transaction.Label
 	dto.Amount = transaction.Amount
 	dto.NoteId = transaction.NoteId
 	dto.CategoryId = transaction.CategoryId
 	dto.Timestamp = transaction.Timestamp
-
-	return nil
 }

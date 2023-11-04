@@ -23,13 +23,11 @@ func (dto *UserDTO) ToEntity() (*models.User, error) {
 	return u, nil
 }
 
-func (dto *UserDTO) FromEntity(user *models.User) error {
+func (dto *UserDTO) FromEntity(user *models.User) {
 	dto.BaseDTO.FromEntity(&user.Base)
 	dto.Name = user.Name
 	dto.Email = user.Email
 	dto.Password = user.Password
-
-	return nil
 }
 
 type UserRegisterDTO struct {

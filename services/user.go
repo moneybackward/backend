@@ -60,11 +60,7 @@ func (userSvc *userService) Create(user *dto.UserRegisterDTO) (*dto.UserDTO, err
 		return nil, err
 	}
 	createdUser := &dto.UserDTO{}
-	err = createdUser.FromEntity(userModel)
-	if err != nil {
-		slog.Error("Failed to convert user to dto")
-		return nil, err
-	}
+	createdUser.FromEntity(userModel)
 	return createdUser, nil
 }
 
@@ -74,11 +70,7 @@ func (userSvc *userService) FindByEmail(email string) (*dto.UserDTO, error) {
 		return nil, err
 	}
 	userDTO := &dto.UserDTO{}
-	err = userDTO.FromEntity(userModel)
-	if err != nil {
-		slog.Error("Failed to convert user to dto")
-		return nil, err
-	}
+	userDTO.FromEntity(userModel)
 	return userDTO, nil
 }
 
@@ -94,11 +86,7 @@ func (userSvc *userService) FindAll() ([]dto.UserDTO, error) {
 	// Convert user models to user dtos
 	for _, userModel := range userModels {
 		userDTO := &dto.UserDTO{}
-		err := userDTO.FromEntity(&userModel)
-		if err != nil {
-			slog.Error("Failed to convert user to dto")
-			continue
-		}
+		userDTO.FromEntity(&userModel)
 		users = append(users, *userDTO)
 	}
 
@@ -111,11 +99,7 @@ func (userSvc *userService) Find(userId uuid.UUID) (*dto.UserDTO, error) {
 		return nil, err
 	}
 	userDTO := &dto.UserDTO{}
-	err = userDTO.FromEntity(userModel)
-	if err != nil {
-		slog.Error("Failed to convert user to dto")
-		return nil, err
-	}
+	userDTO.FromEntity(userModel)
 	return userDTO, nil
 }
 
@@ -130,11 +114,7 @@ func (userSvc *userService) Login(user *dto.UserLoginDTO) (string, error) {
 	}
 
 	userDTO := &dto.UserDTO{}
-	err = userDTO.FromEntity(userModel)
-	if err != nil {
-		slog.Error("Failed to convert user to dto")
-		return "", err
-	}
+	userDTO.FromEntity(userModel)
 
 	err = userDTO.VerifyPassword(user.Password)
 	if err != nil {

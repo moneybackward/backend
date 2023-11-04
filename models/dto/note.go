@@ -32,10 +32,8 @@ func (dto *NoteCreateDTO) ToEntity() (*models.Note, error) {
 	return u, nil
 }
 
-func (dto *NoteDTO) FromEntity(note *models.Note) error {
+func (dto *NoteDTO) FromEntity(note *models.Note) {
 	dto.BaseDTO.FromEntity(&note.Base)
 	dto.Name = note.Name
 	dto.UserId = note.UserId
-
-	return nil
 }

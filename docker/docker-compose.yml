@@ -18,7 +18,7 @@ services:
 
   be-lint:
     container_name: moneybackward-be-lint
-    image: golangci/golangci-lint
+    image: golangci/golangci-lint:v1.55-alpine
     volumes:
       - ./..:/go/src/app
     working_dir: /go/src/app
