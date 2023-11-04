@@ -2,6 +2,7 @@
 version: '1'
 
 services:
+    
   db:
     container_name: moneybackward-db
     image: postgres:alpine
@@ -15,14 +16,6 @@ services:
     volumes:
       - ../ignore/_postgres-data:/var/lib/postgresql/data
 
-  be:
-    container_name: moneybackward-be
-    image: golang:1.21.1-alpine3.14
-    restart: always
-    working_dir: ./..
-    command: make gendocs && make dev
-
-
   be-lint:
     container_name: moneybackward-be-lint
     image: golangci/golangci-lint
@@ -30,3 +23,16 @@ services:
       - ./..:/go/src/app
     working_dir: /go/src/app
     command: golangci-lint run -v
+
+  be:
+    container_name: moneybackward-be
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+    volumes:
+      - ./..:/go/src/app
+    restart: always
+    build: 
+      dockerfile: ./be.Dockerfile
+    command: go run main.go
