@@ -75,7 +75,7 @@ func (noteCtrl *noteController) List(ctx *gin.Context) {
 		return
 	}
 
-	notes, err := noteCtrl.noteService.FindAll(userId)
+	notes, err := noteCtrl.noteService.FindUserNotes(userId)
 	if err != nil {
 		log.Panic().Msg(err.Error())
 	}

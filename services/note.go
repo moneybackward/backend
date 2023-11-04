@@ -1,19 +1,18 @@
 package services
 
 import (
-	"log"
 	"sync"
 
 	"github.com/google/uuid"
-	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
+	"github.com/rs/zerolog/log"
 )
 
 type NoteService interface {
-	Create(userId uuid.UUID, note *dto.NoteCreateDTO) (*models.Note, error)
-	FindAll(userId uuid.UUID) ([]models.Note, error)
-	FindUserNotes(userId uuid.UUID) ([]models.Note, error)
+	Create(userId uuid.UUID, note *dto.NoteCreateDTO) (*dto.NoteDTO, error)
+	FindAll() ([]dto.NoteDTO, error)
+	FindUserNotes(userId uuid.UUID) ([]dto.NoteDTO, error)
 	Delete(noteId uuid.UUID) error
 }
 
@@ -33,20 +32,20 @@ func NewNoteService() NoteService {
 	return noteServiceInstance
 }
 
-func (noteSvc *noteService) Create(userId uuid.UUID, note *dto.NoteCreateDTO) (*models.Note, error) {
-	notemodels, err := note.ToEntity()
-	notemodels.UserId = userId
+func (noteSvc *noteService) Create(userId uuid.UUID, note *dto.NoteCreateDTO) (*dto.NoteDTO, error) {
+	result, err := noteSvc.noteRepository.Save(userId, note)
 	if err != nil {
-		log.Panic("Failed to convert Note to ")
+		log.Error().Msg(err.Error())
+		return nil, err
 	}
-	return noteSvc.noteRepository.Save(notemodels)
+	return result, nil
 }
 
-func (noteSvc *noteService) FindAll(userId uuid.UUID) ([]models.Note, error) {
-	return noteSvc.noteRepository.FindAll(userId)
+func (noteSvc *noteService) FindAll() ([]dto.NoteDTO, error) {
+	return noteSvc.noteRepository.FindAll()
 }
 
-func (noteSvc *noteService) FindUserNotes(userId uuid.UUID) ([]models.Note, error) {
+func (noteSvc *noteService) FindUserNotes(userId uuid.UUID) ([]dto.NoteDTO, error) {
 	return noteSvc.noteRepository.FindUserNotes(userId)
 }
 
