@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/services"
+	"github.com/rs/zerolog/log"
 )
 
 type UserController interface {
@@ -38,13 +38,13 @@ func NewUserController() UserController {
 func (ctrl *userController) Register(ctx *gin.Context) {
 	var input dto.UserRegisterDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.Error(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	user, err := ctrl.userService.Create(&input)
 	if err != nil {
-		ctx.Error(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -60,13 +60,13 @@ func (ctrl *userController) Register(ctx *gin.Context) {
 func (userCtrl *userController) Login(ctx *gin.Context) {
 	var input dto.UserLoginDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.Error(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	token, err := userCtrl.userService.Login(&input)
 	if err != nil {
-		ctx.Error(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -81,7 +81,7 @@ func (userCtrl *userController) Login(ctx *gin.Context) {
 func (userCtrl *userController) List(ctx *gin.Context) {
 	users, err := userCtrl.userService.FindAll()
 	if err != nil {
-		log.Panic(err)
+		log.Error().Err(err).Msg("Error finding users")
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": users})
 }

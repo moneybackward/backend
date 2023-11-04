@@ -14,3 +14,19 @@ services:
       - 5432:5432
     volumes:
       - ../ignore/_postgres-data:/var/lib/postgresql/data
+
+  be:
+    container_name: moneybackward-be
+    image: golang:1.21.1-alpine3.14
+    restart: always
+    working_dir: ./..
+    command: make gendocs && make dev
+
+
+  be-lint:
+    container_name: moneybackward-be-lint
+    image: golangci/golangci-lint
+    volumes:
+      - ./..:/go/src/app
+    working_dir: /go/src/app
+    command: golangci-lint run -v

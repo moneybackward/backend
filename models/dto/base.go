@@ -14,7 +14,7 @@ type BaseDTO struct {
 	DeletedAt *time.Time `json:"deleted_at"`
 }
 
-func (dto *BaseDTO) FromEntity(base *models.Base) error {
+func (dto *BaseDTO) FromEntity(base *models.Base) {
 	dto.Id = base.Id
 	dto.CreatedAt = base.CreatedAt
 	dto.UpdatedAt = base.UpdatedAt
@@ -22,6 +22,4 @@ func (dto *BaseDTO) FromEntity(base *models.Base) error {
 	if base.DeletedAt.Valid {
 		dto.DeletedAt = &base.DeletedAt.Time
 	}
-
-	return nil
 }
