@@ -1,11 +1,15 @@
 package dto
 
-import "github.com/moneybackward/backend/models"
+import (
+	"github.com/google/uuid"
+	"github.com/moneybackward/backend/models"
+)
 
 type CategoryCreateDTO struct {
-	Name     string `json:"name"`
-	Priority int    `json:"priority"`
-	NoteId   int    `json:"note_id"`
+	Name     string    `json:"name"`
+	Priority int       `json:"priority"`
+	Budget   float64   `json:"budget"`
+	NoteId   uuid.UUID `json:"note_id"`
 }
 
 type CategoryDTO struct {
@@ -26,4 +30,8 @@ func (dto *CategoryDTO) FromEntity(category models.Category) {
 	dto.Name = category.Name
 	dto.Priority = category.Priority
 	dto.NoteId = category.NoteId
+}
+
+type CategorySetBudgetDTO struct {
+	Budget float64 `json:"budget"`
 }

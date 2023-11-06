@@ -9,7 +9,7 @@ import (
 type TransactionDTO struct {
 	BaseDTO
 	Label     string    `json:"label"`
-	Amount    int       `json:"amount"`
+	Amount    float64   `json:"amount"`
 	Timestamp time.Time `json:"timestamp"`
 
 	NoteId     int `json:"note_id"`

@@ -11,8 +11,10 @@ import (
 
 type NoteService interface {
 	Create(userId uuid.UUID, note *dto.NoteCreateDTO) (*dto.NoteDTO, error)
+	Find(noteId uuid.UUID) (*dto.NoteDTO, error)
 	FindAll() ([]dto.NoteDTO, error)
 	FindUserNotes(userId uuid.UUID) ([]dto.NoteDTO, error)
+	IsBelongsToUser(noteId uuid.UUID, userId uuid.UUID) bool
 	Delete(noteId uuid.UUID) error
 }
 
@@ -41,6 +43,10 @@ func (noteSvc *noteService) Create(userId uuid.UUID, note *dto.NoteCreateDTO) (*
 	return result, nil
 }
 
+func (noteSvc *noteService) Find(noteId uuid.UUID) (*dto.NoteDTO, error) {
+	return noteSvc.noteRepository.Find(noteId)
+}
+
 func (noteSvc *noteService) FindAll() ([]dto.NoteDTO, error) {
 	return noteSvc.noteRepository.FindAll()
 }
@@ -51,4 +57,12 @@ func (noteSvc *noteService) FindUserNotes(userId uuid.UUID) ([]dto.NoteDTO, erro
 
 func (noteSvc *noteService) Delete(noteId uuid.UUID) error {
 	return noteSvc.noteRepository.Delete(noteId)
+}
+
+func (noteSvc *noteService) IsBelongsToUser(noteId uuid.UUID, userId uuid.UUID) bool {
+	note, error := noteSvc.Find(noteId)
+	if error != nil {
+		return false
+	}
+	return note.UserId == userId
 }

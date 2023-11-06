@@ -6,11 +6,16 @@ import (
 	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
+	"github.com/rs/zerolog/log"
 )
 
 type CategoryService interface {
-	Create(category dto.CategoryCreateDTO) (dto.CategoryDTO, error)
-	FindAll(noteId uuid.UUID) ([]dto.CategoryDTO, error)
+	Create(category dto.CategoryCreateDTO) (*dto.CategoryDTO, error)
+	Update(category dto.CategoryDTO) (*dto.CategoryDTO, error)
+	UpdateBudget(categoryId uuid.UUID, budget float64) (*dto.CategoryDTO, error)
+	Find(categoryId uuid.UUID) (*dto.CategoryDTO, error)
+	FindAllOfNote(noteId uuid.UUID) ([]dto.CategoryDTO, error)
+	IsBelongsToNote(categoryId uuid.UUID, noteId uuid.UUID) bool
 	Delete(categoryId uuid.UUID) error
 }
 
@@ -30,12 +35,38 @@ func NewCategoryService() CategoryService {
 	return categoryServiceInstance
 }
 
-func (categorySvc *categoryService) Create(categoryCreateDto dto.CategoryCreateDTO) (dto.CategoryDTO, error) {
+func (categorySvc *categoryService) Create(categoryCreateDto dto.CategoryCreateDTO) (*dto.CategoryDTO, error) {
 	return categorySvc.categoryRepository.Save(categoryCreateDto)
 }
 
-func (categorySvc *categoryService) FindAll(noteId uuid.UUID) ([]dto.CategoryDTO, error) {
-	return categorySvc.categoryRepository.FindAll(noteId)
+func (categorySvc *categoryService) Update(categoryDto dto.CategoryDTO) (*dto.CategoryDTO, error) {
+	return categorySvc.categoryRepository.Update(categoryDto)
+}
+
+func (categorySvc *categoryService) UpdateBudget(categoryId uuid.UUID, budget float64) (*dto.CategoryDTO, error) {
+	categoryDto, err := categorySvc.categoryRepository.Find(categoryId)
+	if err != nil {
+		return nil, err
+	}
+	categoryDto.Budget = budget
+	return categorySvc.categoryRepository.Update(*categoryDto)
+}
+
+func (categorySvc *categoryService) Find(categoryId uuid.UUID) (*dto.CategoryDTO, error) {
+	return categorySvc.categoryRepository.Find(categoryId)
+}
+
+func (categorySvc *categoryService) FindAllOfNote(noteId uuid.UUID) ([]dto.CategoryDTO, error) {
+	return categorySvc.categoryRepository.FindAllOfNote(noteId)
+}
+
+func (categorySvc *categoryService) IsBelongsToNote(categoryId uuid.UUID, noteId uuid.UUID) bool {
+	category, err := categorySvc.Find(categoryId)
+	if err != nil {
+		log.Error().Msg("Category not found")
+	}
+
+	return category.NoteId == noteId
 }
 
 func (categorySvc *categoryService) Delete(categoryId uuid.UUID) error {
