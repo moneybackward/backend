@@ -9,11 +9,11 @@ import (
 )
 
 type NoteRepository interface {
-	Save(userId uuid.UUID, noteCreate *dto.NoteCreateDTO) (*dto.NoteDTO, error)
-	Find(noteId uuid.UUID) (*dto.NoteDTO, error)
+	Save(uuid.UUID, *dto.NoteCreateDTO) (*dto.NoteDTO, error)
+	Find(uuid.UUID) (*dto.NoteDTO, error)
 	FindAll() ([]dto.NoteDTO, error)
-	FindUserNotes(userId uuid.UUID) ([]dto.NoteDTO, error)
-	Delete(noteId uuid.UUID) error
+	FindUserNotes(uuid.UUID) ([]dto.NoteDTO, error)
+	Delete(uuid.UUID) error
 	Migrate() error
 }
 

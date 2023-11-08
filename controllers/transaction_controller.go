@@ -10,9 +10,9 @@ import (
 )
 
 type TransactionController interface {
-	List(ctx *gin.Context)
-	Add(ctx *gin.Context)
-	Delete(ctx *gin.Context)
+	List(*gin.Context)
+	Add(*gin.Context)
+	Delete(*gin.Context)
 }
 
 type transactionController struct {
@@ -30,9 +30,10 @@ func NewTransactionController() TransactionController {
 // @Summary Add a transaction
 // @Tags transactions
 // @Accept json
+// @Security BearerAuth
+// @Router /notes/:note_id/transactions [post]
 // @Param transaction body dto.TransactionDTO true "transaction"
 // @Success 201 {object} models.Transaction
-// @Router /notes/:note_id/transactions [post]
 func (ctrl *transactionController) Add(ctx *gin.Context) {
 	var input dto.TransactionDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -51,8 +52,9 @@ func (ctrl *transactionController) Add(ctx *gin.Context) {
 
 // @Summary List transactions
 // @Tags transactions
-// @Success 200 {object} []models.Transaction
+// @Security BearerAuth
 // @Router /notes/:note_id/transactions [get]
+// @Success 200 {object} []models.Transaction
 func (ctrl *transactionController) List(ctx *gin.Context) {
 	noteId := uuid.MustParse(ctx.Param("noteId"))
 	transactions, err := ctrl.transactionService.FindAll(noteId)
@@ -65,6 +67,7 @@ func (ctrl *transactionController) List(ctx *gin.Context) {
 
 // @Summary Delete a transaction
 // @Tags transactions
+// @Security BearerAuth
 // @Success 204 {object} nil
 func (ctrl *transactionController) Delete(ctx *gin.Context) {
 	transactionId := uuid.MustParse(ctx.Param("id"))

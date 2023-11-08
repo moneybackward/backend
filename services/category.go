@@ -10,13 +10,13 @@ import (
 )
 
 type CategoryService interface {
-	Create(category dto.CategoryCreateDTO) (*dto.CategoryDTO, error)
-	Update(category dto.CategoryDTO) (*dto.CategoryDTO, error)
-	UpdateBudget(categoryId uuid.UUID, budget float64) (*dto.CategoryDTO, error)
-	Find(categoryId uuid.UUID) (*dto.CategoryDTO, error)
-	FindAllOfNote(noteId uuid.UUID) ([]dto.CategoryDTO, error)
-	IsBelongsToNote(categoryId uuid.UUID, noteId uuid.UUID) bool
-	Delete(categoryId uuid.UUID) error
+	Create(uuid.UUID, dto.CategoryCreateDTO) (*dto.CategoryDTO, error)
+	Update(dto.CategoryDTO) (*dto.CategoryDTO, error)
+	UpdateBudget(uuid.UUID, float64) (*dto.CategoryDTO, error)
+	Find(uuid.UUID) (*dto.CategoryDTO, error)
+	FindAllOfNote(uuid.UUID) ([]dto.CategoryDTO, error)
+	IsBelongsToNote(uuid.UUID, uuid.UUID) bool
+	Delete(uuid.UUID) error
 }
 
 type categoryService struct {
@@ -35,8 +35,8 @@ func NewCategoryService() CategoryService {
 	return categoryServiceInstance
 }
 
-func (categorySvc *categoryService) Create(categoryCreateDto dto.CategoryCreateDTO) (*dto.CategoryDTO, error) {
-	return categorySvc.categoryRepository.Save(categoryCreateDto)
+func (categorySvc *categoryService) Create(noteId uuid.UUID, categoryCreateDto dto.CategoryCreateDTO) (*dto.CategoryDTO, error) {
+	return categorySvc.categoryRepository.Save(noteId, categoryCreateDto)
 }
 
 func (categorySvc *categoryService) Update(categoryDto dto.CategoryDTO) (*dto.CategoryDTO, error) {

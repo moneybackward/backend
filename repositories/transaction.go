@@ -7,9 +7,9 @@ import (
 )
 
 type TransactionRepository interface {
-	Save(transaction *models.Transaction) (*models.Transaction, error)
-	FindAll(noteId uuid.UUID) ([]models.Transaction, error)
-	Delete(transactionId uuid.UUID) error
+	Save(*models.Transaction) (*models.Transaction, error)
+	FindAll(uuid.UUID) ([]models.Transaction, error)
+	Delete(uuid.UUID) error
 }
 
 type transactionRepository struct {

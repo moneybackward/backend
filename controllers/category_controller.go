@@ -11,10 +11,10 @@ import (
 )
 
 type CategoryController interface {
-	List(ctx *gin.Context)
-	Add(ctx *gin.Context)
-	Delete(ctx *gin.Context)
-	SetBudget(ctx *gin.Context)
+	List(*gin.Context)
+	Add(*gin.Context)
+	Delete(*gin.Context)
+	SetBudget(*gin.Context)
 }
 
 type categoryController struct {
@@ -35,9 +35,11 @@ func NewCategoryController() CategoryController {
 // @Summary Add a category
 // @Tags categories
 // @Accept json
-// @Param category body dto.CategoryDTO true "Category"
-// @Success 201 {object} models.Category
-// @Router /notes/:note_id/categories [post]
+// @Security BearerAuth
+// @Router /notes/{note_id}/categories [post]
+// @Param note_id path string true "Note ID"
+// @Param category body dto.CategoryCreateDTO true "Category"
+// @Success 201 {object} dto.CategoryDTO
 func (ctrl *categoryController) Add(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
 	userId := userIdRaw.(uuid.UUID)
@@ -58,7 +60,7 @@ func (ctrl *categoryController) Add(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Not belongs to user"})
 	}
 
-	category, err := ctrl.categoryService.Create(input)
+	category, err := ctrl.categoryService.Create(noteId, input)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -70,10 +72,12 @@ func (ctrl *categoryController) Add(ctx *gin.Context) {
 // @Summary Set budget for a category
 // @Tags categories
 // @Accept json
-// @Param category body dto.CategorySetBudgetDTO true "Category"
-// @Success 201 {object} nil
-// @Router /notes/{note_id}/categories/{category_id}/budget [post]
 // @Security BearerAuth
+// @Router /notes/{note_id}/categories/{category_id}/budget [post]
+// @Param note_id path string true "Note ID"
+// @Param category_id path string true "Category ID"
+// @Param category body dto.CategorySetBudgetDTO true "Category"
+// @Success 200 {object} dto.CategoryDTO
 func (ctrl *categoryController) SetBudget(ctx *gin.Context) {
 	var input dto.CategorySetBudgetDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -100,19 +104,19 @@ func (ctrl *categoryController) SetBudget(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusForbidden, "Category does not belong to the note")
 	}
 
-	notes, err := ctrl.categoryService.UpdateBudget(categoryId, input.Budget)
+	category, err := ctrl.categoryService.UpdateBudget(categoryId, input.Budget)
 	if err != nil {
 		log.Panic().Msg(err.Error())
 	}
-	ctx.JSON(http.StatusOK, gin.H{"data": notes})
+	ctx.JSON(http.StatusOK, gin.H{"data": category})
 }
 
 // @Summary List categories
 // @Tags categories
-// @Success 200 {object} []models.Category
+// @Security BearerAuth
 // @Router /notes/{note_id}/categories [get]
 // @Param note_id path string true "Note ID"
-// @Security BearerAuth
+// @Success 200 {object} []dto.CategoryDTO
 func (ctrl *categoryController) List(ctx *gin.Context) {
 	noteId := uuid.MustParse(ctx.Param("note_id"))
 	categories, err := ctrl.categoryService.FindAllOfNote(noteId)
@@ -125,6 +129,7 @@ func (ctrl *categoryController) List(ctx *gin.Context) {
 
 // @Summary Delete a category
 // @Tags categories
+// @Security BearerAuth
 // @Success 204 {object} nil
 func (ctrl *categoryController) Delete(ctx *gin.Context) {
 	categoryId := uuid.MustParse(ctx.Param("id"))

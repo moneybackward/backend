@@ -8,11 +8,11 @@ import (
 )
 
 type CategoryRepository interface {
-	Save(category dto.CategoryCreateDTO) (*dto.CategoryDTO, error)
-	Update(category dto.CategoryDTO) (*dto.CategoryDTO, error)
-	Find(categoryId uuid.UUID) (*dto.CategoryDTO, error)
-	FindAllOfNote(noteId uuid.UUID) ([]dto.CategoryDTO, error)
-	Delete(categoryId uuid.UUID) error
+	Save(uuid.UUID, dto.CategoryCreateDTO) (*dto.CategoryDTO, error)
+	Update(dto.CategoryDTO) (*dto.CategoryDTO, error)
+	Find(uuid.UUID) (*dto.CategoryDTO, error)
+	FindAllOfNote(uuid.UUID) ([]dto.CategoryDTO, error)
+	Delete(uuid.UUID) error
 }
 
 type categoryRepository struct {
@@ -25,8 +25,10 @@ func NewCategoryRepository() CategoryRepository {
 	}
 }
 
-func (repo *categoryRepository) Save(categoryCreate dto.CategoryCreateDTO) (*dto.CategoryDTO, error) {
+func (repo *categoryRepository) Save(noteId uuid.UUID, categoryCreate dto.CategoryCreateDTO) (*dto.CategoryDTO, error) {
 	category := categoryCreate.ToEntity()
+	category.NoteId = noteId
+
 	repo.DB.Create(&category)
 	categoryDto := dto.CategoryDTO{}
 	categoryDto.FromEntity(category)

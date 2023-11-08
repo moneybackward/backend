@@ -6,22 +6,21 @@ import (
 )
 
 type CategoryCreateDTO struct {
-	Name     string    `json:"name"`
-	Priority int       `json:"priority"`
-	Budget   float64   `json:"budget"`
-	NoteId   uuid.UUID `json:"note_id"`
+	Name     string  `json:"name"`
+	Priority int     `json:"priority"`
+	Budget   float64 `json:"budget"`
 }
 
 type CategoryDTO struct {
 	BaseDTO
 	CategoryCreateDTO
+	NoteId uuid.UUID `json:"note_id"`
 }
 
 func (dto *CategoryCreateDTO) ToEntity() models.Category {
 	return models.Category{
 		Name:     dto.Name,
 		Priority: dto.Priority,
-		NoteId:   dto.NoteId,
 	}
 }
 

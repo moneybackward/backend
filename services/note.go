@@ -10,12 +10,12 @@ import (
 )
 
 type NoteService interface {
-	Create(userId uuid.UUID, note *dto.NoteCreateDTO) (*dto.NoteDTO, error)
-	Find(noteId uuid.UUID) (*dto.NoteDTO, error)
+	Create(uuid.UUID, *dto.NoteCreateDTO) (*dto.NoteDTO, error)
+	Find(uuid.UUID) (*dto.NoteDTO, error)
 	FindAll() ([]dto.NoteDTO, error)
-	FindUserNotes(userId uuid.UUID) ([]dto.NoteDTO, error)
-	IsBelongsToUser(noteId uuid.UUID, userId uuid.UUID) bool
-	Delete(noteId uuid.UUID) error
+	FindUserNotes(uuid.UUID) ([]dto.NoteDTO, error)
+	IsBelongsToUser(uuid.UUID, uuid.UUID) bool
+	Delete(uuid.UUID) error
 }
 
 type noteService struct {

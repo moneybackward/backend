@@ -12,12 +12,12 @@ import (
 )
 
 type UserService interface {
-	Create(user *dto.UserRegisterDTO) (*dto.UserDTO, error)
+	Create(*dto.UserRegisterDTO) (*dto.UserDTO, error)
 	FindAll() ([]dto.UserDTO, error)
-	Find(userId uuid.UUID) (*dto.UserDTO, error)
-	FindByEmail(email string) (*dto.UserDTO, error)
-	Delete(userId uuid.UUID) error
-	Login(user *dto.UserLoginDTO) (string, error)
+	Find(uuid.UUID) (*dto.UserDTO, error)
+	FindByEmail(string) (*dto.UserDTO, error)
+	Delete(uuid.UUID) error
+	Login(*dto.UserLoginDTO) (string, error)
 }
 
 type userService struct {
@@ -49,28 +49,19 @@ func (userSvc *userService) Create(user *dto.UserRegisterDTO) (*dto.UserDTO, err
 		return nil, &errors.ConflictError{Message: "Email already exist"}
 	}
 
-	usermodels, err := user.ToEntity()
-	if err != nil {
-		slog.Error("Failed to convert user to ")
-		return nil, err
-	}
-	userModel, err := userSvc.userRepository.Save(usermodels)
+	createdUser, err := userSvc.userRepository.Save(user)
 	if err != nil {
 		slog.Error("Failed to save user")
 		return nil, err
 	}
-	createdUser := &dto.UserDTO{}
-	createdUser.FromEntity(userModel)
 	return createdUser, nil
 }
 
 func (userSvc *userService) FindByEmail(email string) (*dto.UserDTO, error) {
-	userModel, err := userSvc.userRepository.FindByEmail(email)
+	userDTO, err := userSvc.userRepository.FindByEmail(email)
 	if err != nil {
 		return nil, err
 	}
-	userDTO := &dto.UserDTO{}
-	userDTO.FromEntity(userModel)
 	return userDTO, nil
 }
 
@@ -78,28 +69,19 @@ func (userSvc *userService) FindAll() ([]dto.UserDTO, error) {
 	users := []dto.UserDTO{}
 
 	// Get all users from database
-	userModels, err := userSvc.userRepository.FindAll()
+	usersDTO, err := userSvc.userRepository.FindAll()
 	if err != nil {
 		return users, err
 	}
 
-	// Convert user models to user dtos
-	for _, userModel := range userModels {
-		userDTO := &dto.UserDTO{}
-		userDTO.FromEntity(&userModel)
-		users = append(users, *userDTO)
-	}
-
-	return users, nil
+	return usersDTO, nil
 }
 
 func (userSvc *userService) Find(userId uuid.UUID) (*dto.UserDTO, error) {
-	userModel, err := userSvc.userRepository.Find(userId)
+	userDTO, err := userSvc.userRepository.Find(userId)
 	if err != nil {
 		return nil, err
 	}
-	userDTO := &dto.UserDTO{}
-	userDTO.FromEntity(userModel)
 	return userDTO, nil
 }
 
@@ -108,13 +90,10 @@ func (userSvc *userService) Delete(userId uuid.UUID) error {
 }
 
 func (userSvc *userService) Login(user *dto.UserLoginDTO) (string, error) {
-	userModel, err := userSvc.userRepository.FindByEmail(user.Email)
+	userDTO, err := userSvc.userRepository.FindByEmail(user.Email)
 	if err != nil {
 		return "", err
 	}
-
-	userDTO := &dto.UserDTO{}
-	userDTO.FromEntity(userModel)
 
 	err = userDTO.VerifyPassword(user.Password)
 	if err != nil {

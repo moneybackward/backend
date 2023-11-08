@@ -11,10 +11,10 @@ import (
 )
 
 type UserController interface {
-	List(ctx *gin.Context)
-	Register(ctx *gin.Context)
-	Login(ctx *gin.Context)
-	Delete(ctx *gin.Context)
+	List(*gin.Context)
+	Register(*gin.Context)
+	Login(*gin.Context)
+	Delete(*gin.Context)
 }
 
 type userController struct {

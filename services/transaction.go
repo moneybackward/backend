@@ -10,9 +10,9 @@ import (
 )
 
 type TransactionService interface {
-	Create(transaction *dto.TransactionDTO) (*models.Transaction, error)
-	FindAll(noteId uuid.UUID) ([]models.Transaction, error)
-	Delete(transactionId uuid.UUID) error
+	Create(*dto.TransactionDTO) (*models.Transaction, error)
+	FindAll(uuid.UUID) ([]models.Transaction, error)
+	Delete(uuid.UUID) error
 }
 
 type transactionService struct {

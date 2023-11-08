@@ -11,10 +11,10 @@ import (
 )
 
 type NoteController interface {
-	List(ctx *gin.Context)
-	Detail(ctx *gin.Context)
-	Add(ctx *gin.Context)
-	Delete(ctx *gin.Context)
+	List(*gin.Context)
+	Detail(*gin.Context)
+	Add(*gin.Context)
+	Delete(*gin.Context)
 }
 
 type noteController struct {
@@ -32,10 +32,10 @@ func NewNoteController() NoteController {
 // @Summary Add a note
 // @Tags notes
 // @Accept json
+// @Security BearerAuth
+// @Router /notes [post]
 // @Param note body dto.NoteCreateDTO true "Note"
 // @Success 201 {object} models.Note
-// @Router /notes [post]
-// @Security BearerAuth
 func (noteCtrl *noteController) Add(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
 	userId := userIdRaw.(uuid.UUID)
@@ -65,10 +65,10 @@ func (noteCtrl *noteController) Add(ctx *gin.Context) {
 
 // @Summary Get a note
 // @Tags notes
-// @Success 201 {object} dto.NoteDTO
-// @Router /notes/{note_id} [get]
-// @Param note_id path string true "Note ID"
 // @Security BearerAuth
+// @Param note_id path string true "Note ID"
+// @Router /notes/{note_id} [get]
+// @Success 200 {object} dto.NoteDTO
 func (noteCtrl *noteController) Detail(ctx *gin.Context) {
 	noteId := uuid.MustParse(ctx.Param("note_id"))
 	userIdRaw, exists := ctx.Get("userId")
@@ -89,9 +89,9 @@ func (noteCtrl *noteController) Detail(ctx *gin.Context) {
 
 // @Summary List notes
 // @Tags notes
-// @Success 201 {object} []models.Note
-// @Router /notes [get]
 // @Security BearerAuth
+// @Router /notes [get]
+// @Success 200 {object} []dto.NoteDTO
 func (noteCtrl *noteController) List(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
 	userId := userIdRaw.(uuid.UUID)
@@ -109,6 +109,7 @@ func (noteCtrl *noteController) List(ctx *gin.Context) {
 
 // @Summary Delete a category
 // @Tags categories
+// @Security BearerAuth
 // @Success 204 {object} nil
 func (noteCtrl *noteController) Delete(ctx *gin.Context) {
 	noteId := uuid.MustParse(ctx.Param("id"))
