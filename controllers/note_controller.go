@@ -12,6 +12,7 @@ import (
 
 type NoteController interface {
 	List(ctx *gin.Context)
+	Detail(ctx *gin.Context)
 	Add(ctx *gin.Context)
 	Delete(ctx *gin.Context)
 }
@@ -57,6 +58,30 @@ func (noteCtrl *noteController) Add(ctx *gin.Context) {
 	note, err := noteCtrl.noteService.Create(userId, &input)
 	if err != nil {
 		log.Panic().Msg(err.Error())
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": note})
+}
+
+// @Summary Get a note
+// @Tags notes
+// @Success 201 {object} dto.NoteDTO
+// @Router /notes/{note_id} [get]
+// @Param note_id path string true "Note ID"
+// @Security BearerAuth
+func (noteCtrl *noteController) Detail(ctx *gin.Context) {
+	noteId := uuid.MustParse(ctx.Param("note_id"))
+	userIdRaw, exists := ctx.Get("userId")
+	userId := userIdRaw.(uuid.UUID)
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
+		return
+	}
+
+	note, err := noteCtrl.noteService.Find(noteId)
+	if err != nil || note.UserId != userId {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"data": note})

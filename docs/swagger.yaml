@@ -1,6 +1,8 @@
 definitions:
   dto.CategoryDTO:
     properties:
+      budget:
+        type: number
       created_at:
         type: string
       deleted_at:
@@ -10,11 +12,16 @@ definitions:
       name:
         type: string
       note_id:
-        type: integer
+        type: string
       priority:
         type: integer
       updated_at:
         type: string
+    type: object
+  dto.CategorySetBudgetDTO:
+    properties:
+      budget:
+        type: number
     type: object
   dto.NoteCreateDTO:
     properties:
@@ -23,10 +30,28 @@ definitions:
     required:
     - name
     type: object
+  dto.NoteDTO:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    required:
+    - name
+    - user_id
+    type: object
   dto.TransactionDTO:
     properties:
       amount:
-        type: integer
+        type: number
       category_id:
         type: integer
       created_at:
@@ -72,6 +97,8 @@ definitions:
     type: object
   models.Category:
     properties:
+      budget:
+        type: number
       created_at:
         type: string
       deleted_at:
@@ -83,7 +110,7 @@ definitions:
       note:
         $ref: '#/definitions/models.Note'
       note_id:
-        type: integer
+        type: string
       priority:
         type: integer
       updated_at:
@@ -109,7 +136,7 @@ definitions:
   models.Transaction:
     properties:
       amount:
-        type: integer
+        type: number
       category:
         $ref: '#/definitions/models.Category'
       category_id:
@@ -222,23 +249,6 @@ paths:
       tags:
       - notes
   /notes/:note_id/categories:
-    get:
-      parameters:
-      - description: Note ID
-        in: path
-        name: note_id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Category'
-            type: array
-      summary: List categories
-      tags:
-      - categories
     post:
       consumes:
       - application/json
@@ -287,6 +297,63 @@ paths:
       summary: Add a transaction
       tags:
       - transactions
+  /notes/{note_id}:
+    get:
+      parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.NoteDTO'
+      security:
+      - BearerAuth: []
+      summary: Get a note
+      tags:
+      - notes
+  /notes/{note_id}/categories:
+    get:
+      parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: List categories
+      tags:
+      - categories
+  /notes/{note_id}/categories/{category_id}/budget:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CategorySetBudgetDTO'
+      responses:
+        "201":
+          description: Created
+      security:
+      - BearerAuth: []
+      summary: Set budget for a category
+      tags:
+      - categories
   /users:
     get:
       responses:

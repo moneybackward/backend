@@ -130,32 +130,6 @@ const docTemplate = `{
             }
         },
         "/notes/:note_id/categories": {
-            "get": {
-                "tags": [
-                    "categories"
-                ],
-                "summary": "List categories",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Note ID",
-                        "name": "note_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Category"
-                            }
-                        }
-                    }
-                }
-            },
             "post": {
                 "consumes": [
                     "application/json"
@@ -232,6 +206,101 @@ const docTemplate = `{
                 }
             }
         },
+        "/notes/{note_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "notes"
+                ],
+                "summary": "Get a note",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Note ID",
+                        "name": "note_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NoteDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/notes/{note_id}/categories": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "categories"
+                ],
+                "summary": "List categories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Note ID",
+                        "name": "note_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Category"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notes/{note_id}/categories/{category_id}/budget": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Set budget for a category",
+                "parameters": [
+                    {
+                        "description": "Category",
+                        "name": "category",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CategorySetBudgetDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -261,6 +330,9 @@ const docTemplate = `{
         "dto.CategoryDTO": {
             "type": "object",
             "properties": {
+                "budget": {
+                    "type": "number"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -274,13 +346,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "note_id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "priority": {
                     "type": "integer"
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.CategorySetBudgetDTO": {
+            "type": "object",
+            "properties": {
+                "budget": {
+                    "type": "number"
                 }
             }
         },
@@ -295,11 +375,38 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.NoteDTO": {
+            "type": "object",
+            "required": [
+                "name",
+                "user_id"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.TransactionDTO": {
             "type": "object",
             "properties": {
                 "amount": {
-                    "type": "integer"
+                    "type": "number"
                 },
                 "category_id": {
                     "type": "integer"
@@ -368,6 +475,9 @@ const docTemplate = `{
         "models.Category": {
             "type": "object",
             "properties": {
+                "budget": {
+                    "type": "number"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -384,7 +494,7 @@ const docTemplate = `{
                     "$ref": "#/definitions/models.Note"
                 },
                 "note_id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "priority": {
                     "type": "integer"
@@ -424,7 +534,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "amount": {
-                    "type": "integer"
+                    "type": "number"
                 },
                 "category": {
                     "$ref": "#/definitions/models.Category"

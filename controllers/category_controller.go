@@ -72,7 +72,7 @@ func (ctrl *categoryController) Add(ctx *gin.Context) {
 // @Accept json
 // @Param category body dto.CategorySetBudgetDTO true "Category"
 // @Success 201 {object} nil
-// @Router /notes/:note_id/categories/:category_id/budget [post]
+// @Router /notes/{note_id}/categories/{category_id}/budget [post]
 // @Security BearerAuth
 func (ctrl *categoryController) SetBudget(ctx *gin.Context) {
 	var input dto.CategorySetBudgetDTO
@@ -110,8 +110,9 @@ func (ctrl *categoryController) SetBudget(ctx *gin.Context) {
 // @Summary List categories
 // @Tags categories
 // @Success 200 {object} []models.Category
-// @Router /notes/:note_id/categories [get]
+// @Router /notes/{note_id}/categories [get]
 // @Param note_id path string true "Note ID"
+// @Security BearerAuth
 func (ctrl *categoryController) List(ctx *gin.Context) {
 	noteId := uuid.MustParse(ctx.Param("note_id"))
 	categories, err := ctrl.categoryService.FindAllOfNote(noteId)
