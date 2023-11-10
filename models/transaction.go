@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Transaction struct {
 	Base
@@ -8,8 +12,8 @@ type Transaction struct {
 	Amount    float64   `json:"amount"`
 	Timestamp time.Time `json:"timestamp"`
 
-	NoteId     int `json:"note_id"`
-	CategoryId int `json:"category_id"`
+	NoteId     uuid.UUID `json:"note_id"`
+	CategoryId uuid.UUID `json:"category_id"`
 
 	Note     Note     `gorm:"foreignKey:NoteId"`
 	Category Category `gorm:"foreignKey:CategoryId"`

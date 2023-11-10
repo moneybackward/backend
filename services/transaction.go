@@ -4,14 +4,14 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
-	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
 )
 
 type TransactionService interface {
-	Create(*dto.TransactionDTO) (*models.Transaction, error)
-	FindAll(uuid.UUID) ([]models.Transaction, error)
+	Create(noteId uuid.UUID, transactionCreate *dto.TransactionCreateDTO) (*dto.TransactionDTO, error)
+	FindAllOfNote(noteId uuid.UUID) ([]dto.TransactionDTO, error)
+	Find(transactionId uuid.UUID) (*dto.TransactionDTO, error)
 	Delete(uuid.UUID) error
 }
 
@@ -31,16 +31,16 @@ func NewTransactionService() TransactionService {
 	return transactionServiceInstance
 }
 
-func (transactionSvc *transactionService) Create(transaction *dto.TransactionDTO) (*models.Transaction, error) {
-	transactionmodels, err := transaction.ToEntity()
-	if err != nil {
-		return nil, err
-	}
-	return transactionSvc.transactionRepository.Save(transactionmodels)
+func (transactionSvc *transactionService) Create(noteId uuid.UUID, transactionCreate *dto.TransactionCreateDTO) (*dto.TransactionDTO, error) {
+	return transactionSvc.transactionRepository.Save(noteId, transactionCreate)
 }
 
-func (transactionSvc *transactionService) FindAll(noteId uuid.UUID) ([]models.Transaction, error) {
-	return transactionSvc.transactionRepository.FindAll(noteId)
+func (transactionSvc *transactionService) Find(transactionId uuid.UUID) (*dto.TransactionDTO, error) {
+	return transactionSvc.transactionRepository.Find(transactionId)
+}
+
+func (transactionSvc *transactionService) FindAllOfNote(noteId uuid.UUID) ([]dto.TransactionDTO, error) {
+	return transactionSvc.transactionRepository.FindAllOfNote(noteId)
 }
 
 func (transactionSvc *transactionService) Delete(transactionId uuid.UUID) error {

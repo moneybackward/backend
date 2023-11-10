@@ -3,6 +3,7 @@ package dto
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models"
 )
 
@@ -12,11 +13,27 @@ type TransactionDTO struct {
 	Amount    float64   `json:"amount"`
 	Timestamp time.Time `json:"timestamp"`
 
-	NoteId     int `json:"note_id"`
-	CategoryId int `json:"category_id"`
+	NoteId     uuid.UUID `json:"note_id"`
+	CategoryId uuid.UUID `json:"category_id"`
 }
 
-func (dto *TransactionDTO) ToEntity() (*models.Transaction, error) {
+type TransactionCreateDTO struct {
+	Label      string    `json:"label"`
+	Amount     float64   `json:"amount"`
+	CategoryId uuid.UUID `json:"category_id"`
+}
+
+func (dto *TransactionCreateDTO) ToEntity() *models.Transaction {
+	u := &models.Transaction{
+		Label:      dto.Label,
+		Amount:     dto.Amount,
+		CategoryId: dto.CategoryId,
+	}
+
+	return u
+}
+
+func (dto *TransactionDTO) ToEntity() *models.Transaction {
 	u := &models.Transaction{
 		Label:      dto.Label,
 		Amount:     dto.Amount,
@@ -25,7 +42,7 @@ func (dto *TransactionDTO) ToEntity() (*models.Transaction, error) {
 		Timestamp:  dto.Timestamp,
 	}
 
-	return u, nil
+	return u
 }
 
 func (dto *TransactionDTO) FromEntity(transaction *models.Transaction) {

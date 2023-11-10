@@ -12,6 +12,7 @@ import (
 type TransactionController interface {
 	List(*gin.Context)
 	Add(*gin.Context)
+	Detail(*gin.Context)
 	Delete(*gin.Context)
 }
 
@@ -31,17 +32,20 @@ func NewTransactionController() TransactionController {
 // @Tags transactions
 // @Accept json
 // @Security BearerAuth
-// @Router /notes/:note_id/transactions [post]
-// @Param transaction body dto.TransactionDTO true "transaction"
-// @Success 201 {object} models.Transaction
+// @Router /notes/{note_id}/transactions [post]
+// @Param note_id path string true "Note ID"
+// @Param transaction body dto.TransactionCreateDTO true "transaction"
+// @Success 201 {object} dto.TransactionDTO
 func (ctrl *transactionController) Add(ctx *gin.Context) {
-	var input dto.TransactionDTO
+	noteId := uuid.MustParse(ctx.Param("note_id"))
+
+	var input dto.TransactionCreateDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	transaction, err := ctrl.transactionService.Create(&input)
+	transaction, err := ctrl.transactionService.Create(noteId, &input)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -53,11 +57,12 @@ func (ctrl *transactionController) Add(ctx *gin.Context) {
 // @Summary List transactions
 // @Tags transactions
 // @Security BearerAuth
-// @Router /notes/:note_id/transactions [get]
-// @Success 200 {object} []models.Transaction
+// @Router /notes/{note_id}/transactions [get]
+// @Param note_id path string true "Note ID"
+// @Success 200 {object} []dto.TransactionDTO
 func (ctrl *transactionController) List(ctx *gin.Context) {
-	noteId := uuid.MustParse(ctx.Param("noteId"))
-	transactions, err := ctrl.transactionService.FindAll(noteId)
+	noteId := uuid.MustParse(ctx.Param("note_id"))
+	transactions, err := ctrl.transactionService.FindAllOfNote(noteId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -65,13 +70,46 @@ func (ctrl *transactionController) List(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": transactions})
 }
 
+// @Summary Get transaction detail
+// @Tags transactions
+// @Security BearerAuth
+// @Router /notes/{note_id}/transactions/{transaction_id} [get]
+// @Param note_id path string true "Note ID"
+// @Param transaction_id path string true "Transaction ID"
+// @Success 200 {object} []dto.TransactionDTO
+func (ctrl *transactionController) Detail(ctx *gin.Context) {
+	noteId := uuid.MustParse(ctx.Param("note_id"))
+
+	transactionId := uuid.MustParse(ctx.Param("transaction_id"))
+	transaction, err := ctrl.transactionService.Find(transactionId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if transaction.NoteId != noteId {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Not belongs to note"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": transaction})
+}
+
 // @Summary Delete a transaction
 // @Tags transactions
 // @Security BearerAuth
 // @Success 204 {object} nil
 func (ctrl *transactionController) Delete(ctx *gin.Context) {
-	transactionId := uuid.MustParse(ctx.Param("id"))
-	err := ctrl.transactionService.Delete(transactionId)
+	noteId := uuid.MustParse(ctx.Param("note_id"))
+	transactionId := uuid.MustParse(ctx.Param("transaction_id"))
+
+	transaction, err := ctrl.transactionService.Find(transactionId)
+	if err != nil || transaction.NoteId != noteId {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = ctrl.transactionService.Delete(transactionId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
