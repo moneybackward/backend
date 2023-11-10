@@ -13,8 +13,9 @@ import (
 type CategoryController interface {
 	List(*gin.Context)
 	Add(*gin.Context)
+	Detail(*gin.Context)
 	Delete(*gin.Context)
-	SetBudget(*gin.Context)
+	Update(*gin.Context)
 }
 
 type categoryController struct {
@@ -69,17 +70,42 @@ func (ctrl *categoryController) Add(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"data": category})
 }
 
+// @Summary Get a category
+// @Tags categories
+// @Security BearerAuth
+// @Router /notes/{note_id}/categories/{category_id} [get]
+// @Param note_id path string true "Note ID"
+// @Param category_id path string true "Category ID"
+// @Success 200 {object} dto.CategoryDTO
+func (ctrl *categoryController) Detail(ctx *gin.Context) {
+	noteId := uuid.MustParse(ctx.Param("note_id"))
+	categoryId := uuid.MustParse(ctx.Param("category_id"))
+
+	category, err := ctrl.categoryService.Find(categoryId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if category.NoteId != noteId {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "Note or category not found"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": category})
+}
+
 // @Summary Set budget for a category
 // @Tags categories
 // @Accept json
 // @Security BearerAuth
-// @Router /notes/{note_id}/categories/{category_id}/budget [post]
+// @Router /notes/{note_id}/categories/{category_id} [put]
 // @Param note_id path string true "Note ID"
 // @Param category_id path string true "Category ID"
-// @Param category body dto.CategorySetBudgetDTO true "Category"
+// @Param category body dto.CategoryCreateDTO true "Category"
 // @Success 200 {object} dto.CategoryDTO
-func (ctrl *categoryController) SetBudget(ctx *gin.Context) {
-	var input dto.CategorySetBudgetDTO
+func (ctrl *categoryController) Update(ctx *gin.Context) {
+	var input dto.CategoryCreateDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -104,7 +130,12 @@ func (ctrl *categoryController) SetBudget(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusForbidden, "Category does not belong to the note")
 	}
 
-	category, err := ctrl.categoryService.UpdateBudget(categoryId, input.Budget)
+	categoryDto := dto.CategoryDTO{}
+	categoryDto.FromCreateDto(input)
+	categoryDto.Id = categoryId
+	categoryDto.NoteId = noteId
+
+	category, err := ctrl.categoryService.Update(categoryDto)
 	if err != nil {
 		log.Panic().Msg(err.Error())
 	}

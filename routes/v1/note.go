@@ -19,7 +19,8 @@ func RegisterNoteRoutes(router *gin.RouterGroup) {
 
 		notes.GET("/:note_id/categories", middlewares.JwtAuthMiddleware(), categoryController.List)
 		notes.POST("/:note_id/categories", middlewares.JwtAuthMiddleware(), categoryController.Add)
-		notes.POST("/:note_id/categories/:category_id/budget", middlewares.JwtAuthMiddleware(), categoryController.SetBudget)
+		notes.GET("/:note_id/categories/:category_id", middlewares.JwtAuthMiddleware(), categoryController.Detail)
+		notes.PUT("/:note_id/categories/:category_id", middlewares.JwtAuthMiddleware(), categoryController.Update)
 
 		notes.GET("/:note_id/transactions", middlewares.JwtAuthMiddleware(), transactionController.List)
 		notes.POST("/:note_id/transactions", middlewares.JwtAuthMiddleware(), transactionController.Add)

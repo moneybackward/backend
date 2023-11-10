@@ -24,6 +24,14 @@ func (dto *CategoryCreateDTO) ToEntity() models.Category {
 	}
 }
 
+func (dto *CategoryDTO) ToEntity() models.Category {
+	return models.Category{
+		NoteId:   dto.NoteId,
+		Name:     dto.Name,
+		Priority: dto.Priority,
+	}
+}
+
 func (dto *CategoryDTO) FromEntity(category models.Category) {
 	dto.BaseDTO.FromEntity(&category.Base)
 	dto.Name = category.Name
@@ -31,6 +39,8 @@ func (dto *CategoryDTO) FromEntity(category models.Category) {
 	dto.NoteId = category.NoteId
 }
 
-type CategorySetBudgetDTO struct {
-	Budget float64 `json:"budget"`
+func (dto *CategoryDTO) FromCreateDto(createDto CategoryCreateDTO) {
+	dto.Name = createDto.Name
+	dto.Priority = createDto.Priority
+	dto.Budget = createDto.Budget
 }

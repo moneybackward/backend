@@ -289,8 +289,43 @@ const docTemplate = `{
                 }
             }
         },
-        "/notes/{note_id}/categories/{category_id}/budget": {
-            "post": {
+        "/notes/{note_id}/categories/{category_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "categories"
+                ],
+                "summary": "Get a category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Note ID",
+                        "name": "note_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "category_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CategoryDTO"
+                        }
+                    }
+                }
+            },
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -305,12 +340,26 @@ const docTemplate = `{
                 "summary": "Set budget for a category",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Note ID",
+                        "name": "note_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "category_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Category",
                         "name": "category",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CategorySetBudgetDTO"
+                            "$ref": "#/definitions/dto.CategoryCreateDTO"
                         }
                     }
                 ],
@@ -390,14 +439,6 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
-                }
-            }
-        },
-        "dto.CategorySetBudgetDTO": {
-            "type": "object",
-            "properties": {
-                "budget": {
-                    "type": "number"
                 }
             }
         },
@@ -544,6 +585,12 @@ const docTemplate = `{
         "models.Note": {
             "type": "object",
             "properties": {
+                "categories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Category"
+                    }
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -555,6 +602,12 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "transactions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Transaction"
+                    }
                 },
                 "updated_at": {
                     "type": "string"

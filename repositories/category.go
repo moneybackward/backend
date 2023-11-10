@@ -37,6 +37,7 @@ func (repo *categoryRepository) Save(noteId uuid.UUID, categoryCreate dto.Catego
 
 func (u *categoryRepository) Update(category dto.CategoryDTO) (*dto.CategoryDTO, error) {
 	categoryModel := category.ToEntity()
+	categoryModel.Id = category.Id
 	err := u.DB.Save(&categoryModel).Error
 	if err != nil {
 		return nil, err

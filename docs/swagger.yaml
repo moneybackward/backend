@@ -27,11 +27,6 @@ definitions:
       updated_at:
         type: string
     type: object
-  dto.CategorySetBudgetDTO:
-    properties:
-      budget:
-        type: number
-    type: object
   dto.NoteCreateDTO:
     properties:
       name:
@@ -127,6 +122,10 @@ definitions:
     type: object
   models.Note:
     properties:
+      categories:
+        items:
+          $ref: '#/definitions/models.Category'
+        type: array
       created_at:
         type: string
       deleted_at:
@@ -135,6 +134,10 @@ definitions:
         type: string
       name:
         type: string
+      transactions:
+        items:
+          $ref: '#/definitions/models.Transaction'
+        type: array
       updated_at:
         type: string
       user:
@@ -354,17 +357,49 @@ paths:
       summary: Add a category
       tags:
       - categories
-  /notes/{note_id}/categories/{category_id}/budget:
-    post:
+  /notes/{note_id}/categories/{category_id}:
+    get:
+      parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
+      - description: Category ID
+        in: path
+        name: category_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CategoryDTO'
+      security:
+      - BearerAuth: []
+      summary: Get a category
+      tags:
+      - categories
+    put:
       consumes:
       - application/json
       parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
+      - description: Category ID
+        in: path
+        name: category_id
+        required: true
+        type: string
       - description: Category
         in: body
         name: category
         required: true
         schema:
-          $ref: '#/definitions/dto.CategorySetBudgetDTO'
+          $ref: '#/definitions/dto.CategoryCreateDTO'
       responses:
         "200":
           description: OK

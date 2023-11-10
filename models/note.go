@@ -7,4 +7,7 @@ type Note struct {
 	Name   string    `json:"name"`
 	UserId uuid.UUID `json:"user_id"`
 	User   User      `gorm:"foreignKey:UserId"`
+
+	Categories   []Category    `gorm:"foreignKey:NoteId"`
+	Transactions []Transaction `gorm:"foreignKey:NoteId"`
 }
