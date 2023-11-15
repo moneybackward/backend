@@ -8,19 +8,19 @@ services:
     image: postgres:alpine
     restart: always
     environment:
-      POSTGRES_DB: moneybackward
-      POSTGRES_USER: moneybackward
-      POSTGRES_PASSWORD: pass-word
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - 5432:5432
+      - ${DB_PORT}:5432
     volumes:
-      - ../ignore/_postgres-data:/var/lib/postgresql/data
+      - ./ignore/_postgres-data:/var/lib/postgresql/data
 
   be-lint:
     container_name: moneybackward-be-lint
     image: golangci/golangci-lint:v1.55-alpine
     volumes:
-      - ./..:/go/src/app
+      - .:/go/src/app
     working_dir: /go/src/app
     command: golangci-lint run -v
 
@@ -31,8 +31,8 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./..:/go/src/app
+      - .:/go/src/app
     restart: always
     build: 
-      dockerfile: ./be.Dockerfile
+      dockerfile: ./dockerfiles/be.Dockerfile
     command: go run main.go
