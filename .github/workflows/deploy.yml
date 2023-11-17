@@ -1,9 +1,11 @@
 name: deploy
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["golangci-lint"]
+    branches: [main]
+    types: 
+      - completed
 
 jobs:
   deploy:
