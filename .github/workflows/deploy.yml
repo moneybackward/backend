@@ -47,5 +47,5 @@ jobs:
         key: ${{ secrets.SERVER_KEY }}
         port:
         script:           
-          sudo systemctl restart ${{ secrets.SERVICE_NAME }}.service &&
-          sudo systemctl status ${{ secrets.SERVICE_NAME }}
+          systemctl --user restart ${{ secrets.SERVICE_NAME }}.service &&
+          systemctl --user status ${{ secrets.SERVICE_NAME }}
