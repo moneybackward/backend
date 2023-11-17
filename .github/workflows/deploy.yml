@@ -32,8 +32,8 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SERVER_KEY }}
         port: 
-        source: "app"         
-        target: "dist"    
+        source: "moneybackward-be"         
+        target: "/usr/local/bin/"    
 
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
