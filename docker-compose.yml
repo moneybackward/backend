@@ -36,3 +36,4 @@ services:
     build: 
       dockerfile: ./dockerfiles/be.Dockerfile
     command: go run main.go
+

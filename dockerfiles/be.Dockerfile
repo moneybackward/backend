@@ -4,11 +4,10 @@ WORKDIR /go/src/app
 
 COPY ./.. .
 
-RUN echo $(ls -la)
 RUN go mod download
 
 EXPOSE 8000
 
-RUN swag init
+RUN go install github.com/swaggo/swag/cmd/swag@latest && swag init
 
 RUN go build -o moneybackward-be
