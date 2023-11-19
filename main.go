@@ -42,6 +42,11 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	models.ConnectDB()
+	engine.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "ok",
+		})
+	})
 	routes.RegisterRoutes(engine)
 
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
