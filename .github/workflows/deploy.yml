@@ -22,15 +22,8 @@ jobs:
       with: 
         go-version: 1.21
     
-    - name: 'Create env file'
-      run: |
-        touch .env
-        echo "${{ secrets.ENV_FILE }}" > .env
-
     - name: Build app 
       run: go build -o moneybackward-be main.go
-      with:
-        file_name: .env
 
     - name: SCP to Ocean
       uses: appleboy/scp-action@master
@@ -40,7 +33,7 @@ jobs:
         key: ${{ secrets.SERVER_KEY }}
         port: 
         source: "moneybackward-be"         
-        target: "/home/moneybackward/bin/"    
+        target: "/home/moneybackward/projects/moneybackward-be"    
 
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
