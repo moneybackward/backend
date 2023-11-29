@@ -92,7 +92,7 @@ func (userSvc *userService) Delete(userId uuid.UUID) error {
 func (userSvc *userService) Login(user *dto.UserLoginDTO) (string, error) {
 	userDTO, err := userSvc.userRepository.FindByEmail(user.Email)
 	if err != nil {
-		return "", err
+		return "", &errors.UnauthorizedError{Message: "Invalid email or password"}
 	}
 
 	err = userDTO.VerifyPassword(user.Password)

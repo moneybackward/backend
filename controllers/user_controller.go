@@ -48,7 +48,7 @@ func (ctrl *userController) Register(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": user})
+	ctx.JSON(http.StatusCreated, gin.H{"data": user})
 }
 
 // @Summary Login a user
