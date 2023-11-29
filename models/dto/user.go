@@ -10,7 +10,7 @@ type UserDTO struct {
 	BaseDTO
 	Name     string `json:"name" binding:"required"`
 	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Password string `json:"-"`
 }
 
 func (dto *UserDTO) ToEntity() (*models.User, error) {
