@@ -9,11 +9,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
-	"github.com/google/uuid"
+	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/utils/errors"
 )
 
-func GenerateToken(user_id uuid.UUID) (string, error) {
+func GenerateToken(userDto *dto.UserDTO) (string, error) {
 
 	token_lifespan, err := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
 
@@ -22,7 +22,9 @@ func GenerateToken(user_id uuid.UUID) (string, error) {
 	}
 
 	claims := jwt.MapClaims{}
-	claims["user_id"] = user_id
+	claims["user_id"] = userDto.Id
+	claims["name"] = userDto.Name
+	claims["email"] = userDto.Email
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(token_lifespan)).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
@@ -63,7 +65,7 @@ func ExtractToken(c *gin.Context) string {
 	return ""
 }
 
-func ExtractTokenID(c *gin.Context) (uuid.UUID, error) {
+func ExtractClaims(c *gin.Context) (jwt.MapClaims, error) {
 
 	tokenString := ExtractToken(c)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -73,16 +75,12 @@ func ExtractTokenID(c *gin.Context) (uuid.UUID, error) {
 		return []byte(os.Getenv("SECRET")), nil
 	})
 	if err != nil {
-		return uuid.Nil, err
+		return nil, err
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-		u_id, err := uuid.Parse(claims["user_id"].(string))
-		if err != nil {
-			return uuid.Nil, err
-		}
-		return u_id, nil
+		return claims, nil
 	}
-	return uuid.Nil, nil
+	return nil, nil
 }

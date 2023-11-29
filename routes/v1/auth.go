@@ -3,6 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/moneybackward/backend/controllers"
+	"github.com/moneybackward/backend/middlewares"
 )
 
 func RegisterAuthRoutes(router *gin.RouterGroup) {
@@ -11,5 +12,6 @@ func RegisterAuthRoutes(router *gin.RouterGroup) {
 	{
 		users.POST("/register", userController.Register)
 		users.POST("/login", userController.Login)
+		users.POST("/verify", middlewares.JwtAuthMiddleware(), userController.VerifyToken)
 	}
 }

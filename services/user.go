@@ -101,7 +101,7 @@ func (userSvc *userService) Login(user *dto.UserLoginDTO) (string, error) {
 		return "", &errors.UnauthorizedError{Message: "Invalid email or password"}
 	}
 
-	token, err := token.GenerateToken(userDTO.Id)
+	token, err := token.GenerateToken(userDTO)
 	if err != nil {
 		slog.Error("Failed to generate token")
 		return "", err

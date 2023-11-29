@@ -9,6 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var UserRepositoryInstance UserRepository
+
 type UserRepository interface {
 	Save(*dto.UserRegisterDTO) (*dto.UserDTO, error)
 	FindAll() ([]dto.UserDTO, error)
@@ -21,10 +23,17 @@ type userRepository struct {
 	DB *gorm.DB
 }
 
-func NewUserRepository() UserRepository {
+func newUserRepository() *userRepository {
 	return &userRepository{
 		DB: models.DB,
 	}
+}
+
+func NewUserRepository() UserRepository {
+	if UserRepositoryInstance == nil {
+		UserRepositoryInstance = newUserRepository()
+	}
+	return UserRepositoryInstance
 }
 
 func (u *userRepository) Save(user *dto.UserRegisterDTO) (*dto.UserDTO, error) {

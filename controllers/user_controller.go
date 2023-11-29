@@ -13,6 +13,7 @@ import (
 type UserController interface {
 	List(*gin.Context)
 	Register(*gin.Context)
+	VerifyToken(*gin.Context)
 	Login(*gin.Context)
 	Delete(*gin.Context)
 }
@@ -71,6 +72,21 @@ func (userCtrl *userController) Login(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"data": token})
+}
+
+// @Summary Verify a token
+// @Tags auth
+// @Security BearerAuth
+// @Success 200 {object} nil
+// @Router /auth/verify [post]
+func (userCtrl *userController) VerifyToken(ctx *gin.Context) {
+	claims, exists := ctx.Get("claims")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User is not authenticated"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": claims})
 }
 
 // @Summary List users

@@ -72,6 +72,24 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/verify": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Verify a token",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/notes": {
             "get": {
                 "security": [

@@ -235,6 +235,16 @@ paths:
       summary: Register a user
       tags:
       - auth
+  /auth/verify:
+    post:
+      responses:
+        "200":
+          description: OK
+      security:
+      - BearerAuth: []
+      summary: Verify a token
+      tags:
+      - auth
   /notes:
     get:
       responses:
