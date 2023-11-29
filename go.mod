@@ -14,6 +14,7 @@ require (
 )
 
 require (
+	github.com/gin-contrib/cors v1.5.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/rs/zerolog v1.31.0 // indirect
 )

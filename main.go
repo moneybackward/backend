@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	docs "github.com/moneybackward/backend/docs"
@@ -36,8 +37,19 @@ func main() {
 	}
 	log.Info().Msg("Running in " + mode + " mode")
 
+	allowedOrigins := []string{
+		"https://moneybackward.jeremiaaxel.my.id",
+		"http://localhost:9000",
+	}
+
 	engine := gin.Default()
 	engine.Use(middlewares.ErrorMiddleware())
+	engine.Use(cors.New(cors.Config{
+		AllowOrigins:     allowedOrigins,
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
