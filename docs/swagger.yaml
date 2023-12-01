@@ -236,7 +236,7 @@ paths:
       tags:
       - auth
   /auth/verify:
-    post:
+    get:
       responses:
         "200":
           description: OK

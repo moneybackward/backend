@@ -62,7 +62,7 @@
             }
         },
         "/auth/verify": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
