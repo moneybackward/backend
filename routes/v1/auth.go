@@ -12,6 +12,6 @@ func RegisterAuthRoutes(router *gin.RouterGroup) {
 	{
 		users.POST("/register", userController.Register)
 		users.POST("/login", userController.Login)
-		users.POST("/verify", middlewares.JwtAuthMiddleware(), userController.VerifyToken)
+		users.GET("/verify", middlewares.JwtAuthMiddleware(), userController.VerifyToken)
 	}
 }

@@ -78,7 +78,7 @@ func (userCtrl *userController) Login(ctx *gin.Context) {
 // @Tags auth
 // @Security BearerAuth
 // @Success 200 {object} nil
-// @Router /auth/verify [post]
+// @Router /auth/verify [get]
 func (userCtrl *userController) VerifyToken(ctx *gin.Context) {
 	claims, exists := ctx.Get("claims")
 	if !exists {
