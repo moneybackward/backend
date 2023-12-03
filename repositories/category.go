@@ -9,7 +9,7 @@ import (
 
 type CategoryRepository interface {
 	Save(uuid.UUID, dto.CategoryCreateDTO) (*dto.CategoryDTO, error)
-	Update(dto.CategoryDTO) (*dto.CategoryDTO, error)
+	Update(categoryId uuid.UUID, categoryUpdateDto dto.CategoryUpdateDTO) (*dto.CategoryDTO, error)
 	Find(uuid.UUID) (*dto.CategoryDTO, error)
 	FindAllOfNote(uuid.UUID) ([]dto.CategoryDTO, error)
 	Delete(uuid.UUID) error
@@ -35,17 +35,20 @@ func (repo *categoryRepository) Save(noteId uuid.UUID, categoryCreate dto.Catego
 	return &categoryDto, repo.DB.Error
 }
 
-func (u *categoryRepository) Update(category dto.CategoryDTO) (*dto.CategoryDTO, error) {
-	categoryModel := category.ToEntity()
-	categoryModel.Id = category.Id
-	err := u.DB.Save(&categoryModel).Error
+func (u *categoryRepository) Update(categoryId uuid.UUID, categoryUpdateDto dto.CategoryUpdateDTO) (*dto.CategoryDTO, error) {
+	var category models.Category
+	err := u.DB.First(&category, categoryId).Error
 	if err != nil {
 		return nil, err
 	}
 
+	category.Name = categoryUpdateDto.Name
+	category.Priority = categoryUpdateDto.Priority
+	category.Budget = categoryUpdateDto.Budget
+	u.DB.Save(&category)
 	categoryDto := dto.CategoryDTO{}
-	categoryDto.FromEntity(categoryModel)
-	return &categoryDto, nil
+	categoryDto.FromEntity(category)
+	return &categoryDto, u.DB.Error
 }
 
 func (u *categoryRepository) Find(categoryId uuid.UUID) (*dto.CategoryDTO, error) {

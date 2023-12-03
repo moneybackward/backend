@@ -23,6 +23,7 @@ func RegisterNoteRoutes(router *gin.RouterGroup) {
 		notes.POST("/:note_id/categories", middlewares.JwtAuthMiddleware(), categoryController.Add)
 		notes.GET("/:note_id/categories/:category_id", middlewares.JwtAuthMiddleware(), categoryController.Detail)
 		notes.PUT("/:note_id/categories/:category_id", middlewares.JwtAuthMiddleware(), categoryController.Update)
+		notes.DELETE("/:note_id/categories/:category_id", middlewares.JwtAuthMiddleware(), categoryController.Delete)
 
 		notes.GET("/:note_id/transactions", middlewares.JwtAuthMiddleware(), transactionController.List)
 		notes.GET("/:note_id/transactions/:transaction_id", middlewares.JwtAuthMiddleware(), transactionController.Detail)

@@ -11,7 +11,7 @@ import (
 
 type CategoryService interface {
 	Create(uuid.UUID, dto.CategoryCreateDTO) (*dto.CategoryDTO, error)
-	Update(dto.CategoryDTO) (*dto.CategoryDTO, error)
+	Update(categoryId uuid.UUID, categoryUpdateDto dto.CategoryUpdateDTO) (*dto.CategoryDTO, error)
 	Find(uuid.UUID) (*dto.CategoryDTO, error)
 	FindAllOfNote(uuid.UUID) ([]dto.CategoryDTO, error)
 	IsBelongsToNote(uuid.UUID, uuid.UUID) bool
@@ -38,8 +38,8 @@ func (categorySvc *categoryService) Create(noteId uuid.UUID, categoryCreateDto d
 	return categorySvc.categoryRepository.Save(noteId, categoryCreateDto)
 }
 
-func (categorySvc *categoryService) Update(categoryDto dto.CategoryDTO) (*dto.CategoryDTO, error) {
-	return categorySvc.categoryRepository.Update(categoryDto)
+func (categorySvc *categoryService) Update(categoryId uuid.UUID, categoryUpdateDto dto.CategoryUpdateDTO) (*dto.CategoryDTO, error) {
+	return categorySvc.categoryRepository.Update(categoryId, categoryUpdateDto)
 }
 
 func (categorySvc *categoryService) Find(categoryId uuid.UUID) (*dto.CategoryDTO, error) {
@@ -54,6 +54,7 @@ func (categorySvc *categoryService) IsBelongsToNote(categoryId uuid.UUID, noteId
 	category, err := categorySvc.Find(categoryId)
 	if err != nil {
 		log.Error().Msg("Category not found")
+		return false
 	}
 
 	return category.NoteId == noteId

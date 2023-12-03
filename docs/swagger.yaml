@@ -27,6 +27,15 @@ definitions:
       updated_at:
         type: string
     type: object
+  dto.CategoryUpdateDTO:
+    properties:
+      budget:
+        type: number
+      name:
+        type: string
+      priority:
+        type: integer
+    type: object
   dto.NoteCreateDTO:
     properties:
       name:
@@ -378,6 +387,26 @@ paths:
       tags:
       - categories
   /notes/{note_id}/categories/{category_id}:
+    delete:
+      parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
+      - description: Category ID
+        in: path
+        name: category_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Delete a category
+      tags:
+      - categories
     get:
       parameters:
       - description: Note ID
@@ -419,7 +448,7 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/dto.CategoryCreateDTO'
+          $ref: '#/definitions/dto.CategoryUpdateDTO'
       responses:
         "200":
           description: OK

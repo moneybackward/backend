@@ -97,9 +97,9 @@ func (noteRepo *noteRepository) FindUserNotes(userId uuid.UUID) ([]dto.NoteDTO, 
 }
 
 func (noteRepo *noteRepository) Delete(noteId uuid.UUID) error {
-	return noteRepo.DB.Delete(&dto.NoteDTO{}, noteId).Error
+	return noteRepo.DB.Delete(&models.Note{}, noteId).Error
 }
 
 func (noteRepo *noteRepository) Migrate() error {
-	return noteRepo.DB.AutoMigrate(&dto.NoteDTO{})
+	return noteRepo.DB.AutoMigrate(&models.Note{})
 }

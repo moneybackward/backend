@@ -70,8 +70,8 @@ func (noteSvc *noteService) Delete(noteId uuid.UUID) error {
 }
 
 func (noteSvc *noteService) IsBelongsToUser(noteId uuid.UUID, userId uuid.UUID) bool {
-	note, error := noteSvc.Find(noteId)
-	if error != nil {
+	note, err := noteSvc.Find(noteId)
+	if err != nil {
 		return false
 	}
 	return note.UserId == userId

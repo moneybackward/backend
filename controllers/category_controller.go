@@ -45,25 +45,25 @@ func (ctrl *categoryController) Add(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
 	userId := userIdRaw.(uuid.UUID)
 	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 	}
 
 	noteId := uuid.MustParse(ctx.Param("note_id"))
 
 	var input dto.CategoryCreateDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	isNoteBelongsToUser := ctrl.noteService.IsBelongsToUser(noteId, userId)
 	if !isNoteBelongsToUser {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Not belongs to user"})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Not belongs to user"})
 	}
 
 	category, err := ctrl.categoryService.Create(noteId, input)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -83,12 +83,12 @@ func (ctrl *categoryController) Detail(ctx *gin.Context) {
 
 	category, err := ctrl.categoryService.Find(categoryId)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	if category.NoteId != noteId {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "Note or category not found"})
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Note or category not found"})
 		return
 	}
 
@@ -102,23 +102,23 @@ func (ctrl *categoryController) Detail(ctx *gin.Context) {
 // @Router /notes/{note_id}/categories/{category_id} [put]
 // @Param note_id path string true "Note ID"
 // @Param category_id path string true "Category ID"
-// @Param category body dto.CategoryCreateDTO true "Category"
+// @Param category body dto.CategoryUpdateDTO true "Category"
 // @Success 200 {object} dto.CategoryDTO
 func (ctrl *categoryController) Update(ctx *gin.Context) {
-	var input dto.CategoryCreateDTO
+	userIdRaw, exists := ctx.Get("userId")
+	userId := userIdRaw.(uuid.UUID)
+	if !exists {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
+		return
+	}
+
+	var input dto.CategoryUpdateDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	noteId := uuid.MustParse(ctx.Param("note_id"))
 	categoryId := uuid.MustParse(ctx.Param("category_id"))
-
-	userIdRaw, exists := ctx.Get("userId")
-	userId := userIdRaw.(uuid.UUID)
-	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
-		return
-	}
 
 	isNoteBelongsToUser := ctrl.noteService.IsBelongsToUser(noteId, userId)
 	if !isNoteBelongsToUser {
@@ -130,15 +130,12 @@ func (ctrl *categoryController) Update(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusForbidden, "Category does not belong to the note")
 	}
 
-	categoryDto := dto.CategoryDTO{}
-	categoryDto.FromCreateDto(input)
-	categoryDto.Id = categoryId
-	categoryDto.NoteId = noteId
-
-	category, err := ctrl.categoryService.Update(categoryDto)
+	category, err := ctrl.categoryService.Update(categoryId, input)
 	if err != nil {
 		log.Panic().Msg(err.Error())
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
+
 	ctx.JSON(http.StatusOK, gin.H{"data": category})
 }
 
@@ -149,24 +146,64 @@ func (ctrl *categoryController) Update(ctx *gin.Context) {
 // @Param note_id path string true "Note ID"
 // @Success 200 {object} []dto.CategoryDTO
 func (ctrl *categoryController) List(ctx *gin.Context) {
-	noteId := uuid.MustParse(ctx.Param("note_id"))
-	categories, err := ctrl.categoryService.FindAllOfNote(noteId)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	userIdRaw, exists := ctx.Get("userId")
+	userId := userIdRaw.(uuid.UUID)
+	if !exists {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
 		return
 	}
+
+	noteId := uuid.MustParse(ctx.Param("note_id"))
+	isNoteBelongsToUser := ctrl.noteService.IsBelongsToUser(noteId, userId)
+	if !isNoteBelongsToUser {
+		ctx.AbortWithStatusJSON(http.StatusForbidden, "Note does not belong to the user")
+	}
+
+	categories, err := ctrl.categoryService.FindAllOfNote(noteId)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{"data": categories})
 }
 
 // @Summary Delete a category
 // @Tags categories
 // @Security BearerAuth
+// @Router /notes/{note_id}/categories/{category_id} [delete]
+// @Param note_id path string true "Note ID"
+// @Param category_id path string true "Category ID"
 // @Success 204 {object} nil
 func (ctrl *categoryController) Delete(ctx *gin.Context) {
-	categoryId := uuid.MustParse(ctx.Param("id"))
-	err := ctrl.categoryService.Delete(categoryId)
+	userIdRaw, exists := ctx.Get("userId")
+	noteId := uuid.MustParse(ctx.Param("note_id"))
+	categoryId := uuid.MustParse(ctx.Param("category_id"))
+
+	userId := userIdRaw.(uuid.UUID)
+	if !exists {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
+		return
+	}
+	note, err := ctrl.noteService.Find(noteId)
+	if err != nil || note.UserId != userId {
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	isNoteBelongsToUser := note.UserId == userId
+	if !isNoteBelongsToUser {
+		ctx.AbortWithStatusJSON(http.StatusForbidden, "Note does not belong to the user")
+	}
+
+	isCategoryBelongsToNote := ctrl.categoryService.IsBelongsToNote(categoryId, noteId)
+	if !isCategoryBelongsToNote {
+		ctx.AbortWithStatusJSON(http.StatusForbidden, "Category does not belong to the note")
+	}
+
+	err = ctrl.categoryService.Delete(categoryId)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	ctx.JSON(http.StatusNoContent, gin.H{})

@@ -41,24 +41,25 @@ func (noteCtrl *noteController) Add(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
 	userId := userIdRaw.(uuid.UUID)
 	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
 		return
 	}
 
 	var input dto.NoteCreateDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	if _, err := noteCtrl.userService.Find(userId); err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error(), "message": "User not found"})
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error(), "message": "User not found"})
 		return
 	}
 
 	note, err := noteCtrl.noteService.Create(userId, &input)
 	if err != nil {
 		log.Panic().Msg(err.Error())
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{"data": note})
@@ -75,13 +76,13 @@ func (noteCtrl *noteController) Detail(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
 	userId := userIdRaw.(uuid.UUID)
 	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
 		return
 	}
 
 	note, err := noteCtrl.noteService.Find(noteId)
 	if err != nil || note.UserId != userId {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -97,13 +98,14 @@ func (noteCtrl *noteController) List(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
 	userId := userIdRaw.(uuid.UUID)
 	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
 		return
 	}
 
 	notes, err := noteCtrl.noteService.FindUserNotes(userId)
 	if err != nil {
 		log.Panic().Msg(err.Error())
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": notes})
 }
@@ -119,26 +121,27 @@ func (noteCtrl *noteController) Update(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
 	userId := userIdRaw.(uuid.UUID)
 	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
 		return
 	}
 
 	noteId := uuid.MustParse(ctx.Param("note_id"))
 	var input dto.NoteUpdateDTO
 	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	note, err := noteCtrl.noteService.Find(noteId)
 	if err != nil || note.UserId != userId {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
 	note, err = noteCtrl.noteService.Update(noteId, &input)
 	if err != nil {
 		log.Panic().Msg(err.Error())
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"data": note})
@@ -154,20 +157,20 @@ func (noteCtrl *noteController) Delete(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
 	userId := userIdRaw.(uuid.UUID)
 	if !exists {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
 		return
 	}
 
 	noteId := uuid.MustParse(ctx.Param("note_id"))
 	note, err := noteCtrl.noteService.Find(noteId)
 	if err != nil || note.UserId != userId {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
 	err = noteCtrl.noteService.Delete(noteId)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	ctx.JSON(http.StatusNoContent, gin.H{})
