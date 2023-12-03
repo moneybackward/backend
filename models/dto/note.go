@@ -15,6 +15,8 @@ type NoteCreateDTO struct {
 	Name string `json:"name" binding:"required"`
 }
 
+type NoteUpdateDTO NoteCreateDTO
+
 func (dto *NoteDTO) ToEntity() (*models.Note, error) {
 	u := &models.Note{
 		Name:   dto.Name,

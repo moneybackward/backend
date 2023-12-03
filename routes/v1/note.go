@@ -14,8 +14,10 @@ func RegisterNoteRoutes(router *gin.RouterGroup) {
 	notes := router.Group("/notes")
 	{
 		notes.GET("", middlewares.JwtAuthMiddleware(), noteController.List)
-		notes.GET("/:note_id", middlewares.JwtAuthMiddleware(), noteController.Detail)
 		notes.POST("", middlewares.JwtAuthMiddleware(), noteController.Add)
+		notes.GET("/:note_id", middlewares.JwtAuthMiddleware(), noteController.Detail)
+		notes.PUT("/:note_id", middlewares.JwtAuthMiddleware(), noteController.Update)
+		notes.DELETE("/:note_id", middlewares.JwtAuthMiddleware(), noteController.Delete)
 
 		notes.GET("/:note_id/categories", middlewares.JwtAuthMiddleware(), categoryController.List)
 		notes.POST("/:note_id/categories", middlewares.JwtAuthMiddleware(), categoryController.Add)

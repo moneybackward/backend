@@ -52,6 +52,13 @@ definitions:
     - name
     - user_id
     type: object
+  dto.NoteUpdateDTO:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   dto.TransactionCreateDTO:
     properties:
       amount:
@@ -114,8 +121,6 @@ definitions:
         type: number
       created_at:
         type: string
-      deleted_at:
-        type: string
       id:
         type: string
       name:
@@ -136,8 +141,6 @@ definitions:
           $ref: '#/definitions/models.Category'
         type: array
       created_at:
-        type: string
-      deleted_at:
         type: string
       id:
         type: string
@@ -164,8 +167,6 @@ definitions:
         type: string
       created_at:
         type: string
-      deleted_at:
-        type: string
       id:
         type: string
       label:
@@ -182,8 +183,6 @@ definitions:
   models.User:
     properties:
       created_at:
-        type: string
-      deleted_at:
         type: string
       email:
         type: string
@@ -280,6 +279,21 @@ paths:
       tags:
       - notes
   /notes/{note_id}:
+    delete:
+      parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Delete a category
+      tags:
+      - notes
     get:
       parameters:
       - description: Note ID
@@ -295,6 +309,27 @@ paths:
       security:
       - BearerAuth: []
       summary: Get a note
+      tags:
+      - notes
+    put:
+      parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
+      - description: Note
+        in: body
+        name: note
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NoteUpdateDTO'
+      responses:
+        "200":
+          description: OK
+      security:
+      - BearerAuth: []
+      summary: Update a note
       tags:
       - notes
   /notes/{note_id}/categories:

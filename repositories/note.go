@@ -10,6 +10,7 @@ import (
 
 type NoteRepository interface {
 	Save(uuid.UUID, *dto.NoteCreateDTO) (*dto.NoteDTO, error)
+	Update(noteId uuid.UUID, note *dto.NoteUpdateDTO) (*dto.NoteDTO, error)
 	Find(uuid.UUID) (*dto.NoteDTO, error)
 	FindAll() ([]dto.NoteDTO, error)
 	FindUserNotes(uuid.UUID) ([]dto.NoteDTO, error)
@@ -38,6 +39,19 @@ func (noteRepo *noteRepository) Save(userId uuid.UUID, noteCreate *dto.NoteCreat
 	note := &dto.NoteDTO{}
 	note.FromEntity(notemodels)
 	return note, noteRepo.DB.Error
+}
+
+func (noteRepo *noteRepository) Update(noteId uuid.UUID, noteUpdate *dto.NoteUpdateDTO) (*dto.NoteDTO, error) {
+	var note models.Note
+	err := noteRepo.DB.First(&note, noteId).Error
+	if err != nil {
+		return nil, err
+	}
+	note.Name = noteUpdate.Name
+	noteRepo.DB.Save(&note)
+	noteDto := &dto.NoteDTO{}
+	noteDto.FromEntity(&note)
+	return noteDto, noteRepo.DB.Error
 }
 
 func (noteRepo *noteRepository) Find(noteId uuid.UUID) (*dto.NoteDTO, error) {

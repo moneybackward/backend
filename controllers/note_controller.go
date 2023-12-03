@@ -14,6 +14,7 @@ type NoteController interface {
 	List(*gin.Context)
 	Detail(*gin.Context)
 	Add(*gin.Context)
+	Update(*gin.Context)
 	Delete(*gin.Context)
 }
 
@@ -60,14 +61,14 @@ func (noteCtrl *noteController) Add(ctx *gin.Context) {
 		log.Panic().Msg(err.Error())
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data": note})
+	ctx.JSON(http.StatusCreated, gin.H{"data": note})
 }
 
 // @Summary Get a note
 // @Tags notes
 // @Security BearerAuth
-// @Param note_id path string true "Note ID"
 // @Router /notes/{note_id} [get]
+// @Param note_id path string true "Note ID"
 // @Success 200 {object} dto.NoteDTO
 func (noteCtrl *noteController) Detail(ctx *gin.Context) {
 	noteId := uuid.MustParse(ctx.Param("note_id"))
@@ -107,13 +108,64 @@ func (noteCtrl *noteController) List(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": notes})
 }
 
-// @Summary Delete a category
-// @Tags categories
+// @summary Update a note
+// @Tags notes
 // @Security BearerAuth
+// @Router /notes/{note_id} [put]
+// @Param note_id path string true "Note ID"
+// @Param note body dto.NoteUpdateDTO true "Note"
+// @Success 200 {object} nil
+func (noteCtrl *noteController) Update(ctx *gin.Context) {
+	userIdRaw, exists := ctx.Get("userId")
+	userId := userIdRaw.(uuid.UUID)
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
+		return
+	}
+
+	noteId := uuid.MustParse(ctx.Param("note_id"))
+	var input dto.NoteUpdateDTO
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	note, err := noteCtrl.noteService.Find(noteId)
+	if err != nil || note.UserId != userId {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	note, err = noteCtrl.noteService.Update(noteId, &input)
+	if err != nil {
+		log.Panic().Msg(err.Error())
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": note})
+}
+
+// @Summary Delete a category
+// @Tags notes
+// @Security BearerAuth
+// @Router /notes/{note_id} [delete]
+// @Param note_id path string true "Note ID"
 // @Success 204 {object} nil
 func (noteCtrl *noteController) Delete(ctx *gin.Context) {
-	noteId := uuid.MustParse(ctx.Param("id"))
-	err := noteCtrl.noteService.Delete(noteId)
+	userIdRaw, exists := ctx.Get("userId")
+	userId := userIdRaw.(uuid.UUID)
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found"})
+		return
+	}
+
+	noteId := uuid.MustParse(ctx.Param("note_id"))
+	note, err := noteCtrl.noteService.Find(noteId)
+	if err != nil || note.UserId != userId {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = noteCtrl.noteService.Delete(noteId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

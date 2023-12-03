@@ -11,6 +11,7 @@ import (
 
 type NoteService interface {
 	Create(uuid.UUID, *dto.NoteCreateDTO) (*dto.NoteDTO, error)
+	Update(noteId uuid.UUID, note *dto.NoteUpdateDTO) (*dto.NoteDTO, error)
 	Find(uuid.UUID) (*dto.NoteDTO, error)
 	FindAll() ([]dto.NoteDTO, error)
 	FindUserNotes(uuid.UUID) ([]dto.NoteDTO, error)
@@ -36,6 +37,15 @@ func NewNoteService() NoteService {
 
 func (noteSvc *noteService) Create(userId uuid.UUID, note *dto.NoteCreateDTO) (*dto.NoteDTO, error) {
 	result, err := noteSvc.noteRepository.Save(userId, note)
+	if err != nil {
+		log.Error().Msg(err.Error())
+		return nil, err
+	}
+	return result, nil
+}
+
+func (noteSvc *noteService) Update(noteId uuid.UUID, note *dto.NoteUpdateDTO) (*dto.NoteDTO, error) {
+	result, err := noteSvc.noteRepository.Update(noteId, note)
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return nil, err
