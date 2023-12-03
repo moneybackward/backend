@@ -33,7 +33,7 @@ func NewCategoryController() CategoryController {
 	}
 }
 
-// @Summary Add a category
+// @Summary Create a category
 // @Tags categories
 // @Accept json
 // @Security BearerAuth
@@ -95,7 +95,7 @@ func (ctrl *categoryController) Detail(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": category})
 }
 
-// @Summary Set budget for a category
+// @Summary Update a category
 // @Tags categories
 // @Accept json
 // @Security BearerAuth
@@ -189,11 +189,6 @@ func (ctrl *categoryController) Delete(ctx *gin.Context) {
 	if err != nil || note.UserId != userId {
 		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
-	}
-
-	isNoteBelongsToUser := note.UserId == userId
-	if !isNoteBelongsToUser {
-		ctx.AbortWithStatusJSON(http.StatusForbidden, "Note does not belong to the user")
 	}
 
 	isCategoryBelongsToNote := ctrl.categoryService.IsBelongsToNote(categoryId, noteId)

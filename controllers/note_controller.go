@@ -30,7 +30,7 @@ func NewNoteController() NoteController {
 	}
 }
 
-// @Summary Add a note
+// @Summary Create a note
 // @Tags notes
 // @Accept json
 // @Security BearerAuth
@@ -147,7 +147,7 @@ func (noteCtrl *noteController) Update(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": note})
 }
 
-// @Summary Delete a category
+// @Summary Delete a note
 // @Tags notes
 // @Security BearerAuth
 // @Router /notes/{note_id} [delete]

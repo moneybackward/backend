@@ -98,6 +98,15 @@ definitions:
       updated_at:
         type: string
     type: object
+  dto.TransactionUpdateDTO:
+    properties:
+      amount:
+        type: number
+      category_id:
+        type: string
+      label:
+        type: string
+    type: object
   dto.UserLoginDTO:
     properties:
       email:
@@ -284,7 +293,7 @@ paths:
             $ref: '#/definitions/models.Note'
       security:
       - BearerAuth: []
-      summary: Add a note
+      summary: Create a note
       tags:
       - notes
   /notes/{note_id}:
@@ -300,7 +309,7 @@ paths:
           description: No Content
       security:
       - BearerAuth: []
-      summary: Delete a category
+      summary: Delete a note
       tags:
       - notes
     get:
@@ -383,7 +392,7 @@ paths:
             $ref: '#/definitions/dto.CategoryDTO'
       security:
       - BearerAuth: []
-      summary: Add a category
+      summary: Create a category
       tags:
       - categories
   /notes/{note_id}/categories/{category_id}:
@@ -456,7 +465,7 @@ paths:
             $ref: '#/definitions/dto.CategoryDTO'
       security:
       - BearerAuth: []
-      summary: Set budget for a category
+      summary: Update a category
       tags:
       - categories
   /notes/{note_id}/transactions:
@@ -505,6 +514,26 @@ paths:
       tags:
       - transactions
   /notes/{note_id}/transactions/{transaction_id}:
+    delete:
+      parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
+      - description: Transaction ID
+        in: path
+        name: transaction_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: Delete a transaction
+      tags:
+      - transactions
     get:
       parameters:
       - description: Note ID
@@ -527,6 +556,36 @@ paths:
       security:
       - BearerAuth: []
       summary: Get transaction detail
+      tags:
+      - transactions
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
+      - description: Transaction ID
+        in: path
+        name: transaction_id
+        required: true
+        type: string
+      - description: transaction
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TransactionUpdateDTO'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TransactionDTO'
+      security:
+      - BearerAuth: []
+      summary: Set budget for a transaction
       tags:
       - transactions
   /users:

@@ -9,6 +9,7 @@ import (
 
 type TransactionRepository interface {
 	Save(noteId uuid.UUID, transactionCreate *dto.TransactionCreateDTO) (*dto.TransactionDTO, error)
+	Update(transactionId uuid.UUID, transactionUpdate dto.TransactionUpdateDTO) (*dto.TransactionDTO, error)
 	Find(transactionId uuid.UUID) (*dto.TransactionDTO, error)
 	FindAllOfNote(noteId uuid.UUID) ([]dto.TransactionDTO, error)
 	Delete(uuid.UUID) error
@@ -31,6 +32,22 @@ func (u *transactionRepository) Save(noteId uuid.UUID, transactionCreate *dto.Tr
 
 	transactionDto := dto.TransactionDTO{}
 	transactionDto.FromEntity(transactionModel)
+	return &transactionDto, u.DB.Error
+}
+
+func (u *transactionRepository) Update(transactionId uuid.UUID, transactionUpdate dto.TransactionUpdateDTO) (*dto.TransactionDTO, error) {
+	var transaction models.Transaction
+	err := u.DB.First(&transaction, transactionId).Error
+	if err != nil {
+		return nil, err
+	}
+
+	transaction.Label = transactionUpdate.Label
+	transaction.Amount = transactionUpdate.Amount
+	transaction.CategoryId = transactionUpdate.CategoryId
+	u.DB.Save(&transaction)
+	transactionDto := dto.TransactionDTO{}
+	transactionDto.FromEntity(&transaction)
 	return &transactionDto, u.DB.Error
 }
 

@@ -125,7 +125,7 @@ const docTemplate = `{
                 "tags": [
                     "notes"
                 ],
-                "summary": "Add a note",
+                "summary": "Create a note",
                 "parameters": [
                     {
                         "description": "Note",
@@ -219,7 +219,7 @@ const docTemplate = `{
                 "tags": [
                     "notes"
                 ],
-                "summary": "Delete a category",
+                "summary": "Delete a note",
                 "parameters": [
                     {
                         "type": "string",
@@ -280,7 +280,7 @@ const docTemplate = `{
                 "tags": [
                     "categories"
                 ],
-                "summary": "Add a category",
+                "summary": "Create a category",
                 "parameters": [
                     {
                         "type": "string",
@@ -357,7 +357,7 @@ const docTemplate = `{
                 "tags": [
                     "categories"
                 ],
-                "summary": "Set budget for a category",
+                "summary": "Update a category",
                 "parameters": [
                     {
                         "type": "string",
@@ -536,6 +536,85 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "Set budget for a transaction",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Note ID",
+                        "name": "note_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "name": "transaction_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "transaction",
+                        "name": "transaction",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TransactionUpdateDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.TransactionDTO"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "Delete a transaction",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Note ID",
+                        "name": "note_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "name": "transaction_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
             }
         },
         "/users": {
@@ -712,6 +791,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.TransactionUpdateDTO": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "category_id": {
+                    "type": "string"
+                },
+                "label": {
                     "type": "string"
                 }
             }

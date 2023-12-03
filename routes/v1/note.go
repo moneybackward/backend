@@ -28,5 +28,7 @@ func RegisterNoteRoutes(router *gin.RouterGroup) {
 		notes.GET("/:note_id/transactions", middlewares.JwtAuthMiddleware(), transactionController.List)
 		notes.GET("/:note_id/transactions/:transaction_id", middlewares.JwtAuthMiddleware(), transactionController.Detail)
 		notes.POST("/:note_id/transactions", middlewares.JwtAuthMiddleware(), transactionController.Add)
+		notes.PUT("/:note_id/transactions/:transaction_id", middlewares.JwtAuthMiddleware(), transactionController.Update)
+		notes.DELETE("/:note_id/transactions/:transaction_id", middlewares.JwtAuthMiddleware(), transactionController.Delete)
 	}
 }

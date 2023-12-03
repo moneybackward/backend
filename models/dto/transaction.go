@@ -23,7 +23,19 @@ type TransactionCreateDTO struct {
 	CategoryId uuid.UUID `json:"category_id"`
 }
 
+type TransactionUpdateDTO TransactionCreateDTO
+
 func (dto *TransactionCreateDTO) ToEntity() *models.Transaction {
+	u := &models.Transaction{
+		Label:      dto.Label,
+		Amount:     dto.Amount,
+		CategoryId: dto.CategoryId,
+	}
+
+	return u
+}
+
+func (dto *TransactionUpdateDTO) ToEntity() *models.Transaction {
 	u := &models.Transaction{
 		Label:      dto.Label,
 		Amount:     dto.Amount,

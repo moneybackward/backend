@@ -10,6 +10,7 @@ import (
 
 type TransactionService interface {
 	Create(noteId uuid.UUID, transactionCreate *dto.TransactionCreateDTO) (*dto.TransactionDTO, error)
+	Update(transactionId uuid.UUID, transactionUpdate dto.TransactionUpdateDTO) (*dto.TransactionDTO, error)
 	FindAllOfNote(noteId uuid.UUID) ([]dto.TransactionDTO, error)
 	Find(transactionId uuid.UUID) (*dto.TransactionDTO, error)
 	Delete(uuid.UUID) error
@@ -33,6 +34,10 @@ func NewTransactionService() TransactionService {
 
 func (transactionSvc *transactionService) Create(noteId uuid.UUID, transactionCreate *dto.TransactionCreateDTO) (*dto.TransactionDTO, error) {
 	return transactionSvc.transactionRepository.Save(noteId, transactionCreate)
+}
+
+func (transactionSvc *transactionService) Update(transactionId uuid.UUID, transactionUpdate dto.TransactionUpdateDTO) (*dto.TransactionDTO, error) {
+	return transactionSvc.transactionRepository.Update(transactionId, transactionUpdate)
 }
 
 func (transactionSvc *transactionService) Find(transactionId uuid.UUID) (*dto.TransactionDTO, error) {
