@@ -758,6 +758,9 @@ const docTemplate = `{
                 "category_id": {
                     "type": "string"
                 },
+                "is_expense": {
+                    "type": "boolean"
+                },
                 "label": {
                     "type": "string"
                 }
@@ -781,6 +784,9 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "is_expense": {
+                    "type": "boolean"
+                },
                 "label": {
                     "type": "string"
                 },
@@ -803,6 +809,9 @@ const docTemplate = `{
                 },
                 "category_id": {
                     "type": "string"
+                },
+                "is_expense": {
+                    "type": "boolean"
                 },
                 "label": {
                     "type": "string"
@@ -928,6 +937,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "string"
+                },
+                "is_expense": {
+                    "type": "boolean"
                 },
                 "label": {
                     "type": "string"

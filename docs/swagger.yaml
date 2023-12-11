@@ -74,6 +74,8 @@ definitions:
         type: number
       category_id:
         type: string
+      is_expense:
+        type: boolean
       label:
         type: string
     type: object
@@ -89,6 +91,8 @@ definitions:
         type: string
       id:
         type: string
+      is_expense:
+        type: boolean
       label:
         type: string
       note_id:
@@ -104,6 +108,8 @@ definitions:
         type: number
       category_id:
         type: string
+      is_expense:
+        type: boolean
       label:
         type: string
     type: object
@@ -187,6 +193,8 @@ definitions:
         type: string
       id:
         type: string
+      is_expense:
+        type: boolean
       label:
         type: string
       note:

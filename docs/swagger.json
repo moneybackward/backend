@@ -747,6 +747,9 @@
                 "category_id": {
                     "type": "string"
                 },
+                "is_expense": {
+                    "type": "boolean"
+                },
                 "label": {
                     "type": "string"
                 }
@@ -770,6 +773,9 @@
                 "id": {
                     "type": "string"
                 },
+                "is_expense": {
+                    "type": "boolean"
+                },
                 "label": {
                     "type": "string"
                 },
@@ -792,6 +798,9 @@
                 },
                 "category_id": {
                     "type": "string"
+                },
+                "is_expense": {
+                    "type": "boolean"
                 },
                 "label": {
                     "type": "string"
@@ -917,6 +926,9 @@
                 },
                 "id": {
                     "type": "string"
+                },
+                "is_expense": {
+                    "type": "boolean"
                 },
                 "label": {
                     "type": "string"
