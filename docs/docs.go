@@ -758,6 +758,9 @@ const docTemplate = `{
                 "category_id": {
                     "type": "string"
                 },
+                "date": {
+                    "type": "string"
+                },
                 "is_expense": {
                     "type": "boolean"
                 },
@@ -778,6 +781,9 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
+                "date": {
+                    "type": "string"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -793,9 +799,6 @@ const docTemplate = `{
                 "note_id": {
                     "type": "string"
                 },
-                "timestamp": {
-                    "type": "string"
-                },
                 "updated_at": {
                     "type": "string"
                 }
@@ -808,6 +811,9 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "category_id": {
+                    "type": "string"
+                },
+                "date": {
                     "type": "string"
                 },
                 "is_expense": {
@@ -935,6 +941,9 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
+                "date": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
@@ -948,9 +957,6 @@ const docTemplate = `{
                     "$ref": "#/definitions/models.Note"
                 },
                 "note_id": {
-                    "type": "string"
-                },
-                "timestamp": {
                     "type": "string"
                 },
                 "updated_at": {

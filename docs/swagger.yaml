@@ -74,6 +74,8 @@ definitions:
         type: number
       category_id:
         type: string
+      date:
+        type: string
       is_expense:
         type: boolean
       label:
@@ -87,6 +89,8 @@ definitions:
         type: string
       created_at:
         type: string
+      date:
+        type: string
       deleted_at:
         type: string
       id:
@@ -97,8 +101,6 @@ definitions:
         type: string
       note_id:
         type: string
-      timestamp:
-        type: string
       updated_at:
         type: string
     type: object
@@ -107,6 +109,8 @@ definitions:
       amount:
         type: number
       category_id:
+        type: string
+      date:
         type: string
       is_expense:
         type: boolean
@@ -191,6 +195,8 @@ definitions:
         type: string
       created_at:
         type: string
+      date:
+        type: string
       id:
         type: string
       is_expense:
@@ -200,8 +206,6 @@ definitions:
       note:
         $ref: '#/definitions/models.Note'
       note_id:
-        type: string
-      timestamp:
         type: string
       updated_at:
         type: string

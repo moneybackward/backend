@@ -10,7 +10,7 @@ type Transaction struct {
 	Base
 	Label     string    `json:"label"`
 	Amount    float64   `json:"amount"`
-	Timestamp time.Time `json:"timestamp"`
+	Date      time.Time `json:"date" gorm:"default:CURRENT_TIMESTAMP; not null"`
 	IsExpense bool      `json:"is_expense" gorm:"default:true"`
 
 	NoteId     uuid.UUID `json:"note_id"`

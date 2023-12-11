@@ -747,6 +747,9 @@
                 "category_id": {
                     "type": "string"
                 },
+                "date": {
+                    "type": "string"
+                },
                 "is_expense": {
                     "type": "boolean"
                 },
@@ -767,6 +770,9 @@
                 "created_at": {
                     "type": "string"
                 },
+                "date": {
+                    "type": "string"
+                },
                 "deleted_at": {
                     "type": "string"
                 },
@@ -782,9 +788,6 @@
                 "note_id": {
                     "type": "string"
                 },
-                "timestamp": {
-                    "type": "string"
-                },
                 "updated_at": {
                     "type": "string"
                 }
@@ -797,6 +800,9 @@
                     "type": "number"
                 },
                 "category_id": {
+                    "type": "string"
+                },
+                "date": {
                     "type": "string"
                 },
                 "is_expense": {
@@ -924,6 +930,9 @@
                 "created_at": {
                     "type": "string"
                 },
+                "date": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
@@ -937,9 +946,6 @@
                     "$ref": "#/definitions/models.Note"
                 },
                 "note_id": {
-                    "type": "string"
-                },
-                "timestamp": {
                     "type": "string"
                 },
                 "updated_at": {

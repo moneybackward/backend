@@ -11,7 +11,7 @@ type TransactionDTO struct {
 	BaseDTO
 	Label     string    `json:"label"`
 	Amount    float64   `json:"amount"`
-	Timestamp time.Time `json:"timestamp"`
+	Date      time.Time `json:"date"`
 	IsExpense bool      `json:"is_expense"`
 
 	NoteId     uuid.UUID `json:"note_id"`
@@ -22,7 +22,7 @@ type TransactionCreateDTO struct {
 	Label      string    `json:"label"`
 	Amount     float64   `json:"amount"`
 	CategoryId uuid.UUID `json:"category_id"`
-	Timestamp  time.Time `json:"timestamp"`
+	Date       time.Time `json:"date"`
 	IsExpense  bool      `json:"is_expense"`
 }
 
@@ -34,7 +34,7 @@ func (dto *TransactionCreateDTO) ToEntity() *models.Transaction {
 		Amount:     dto.Amount,
 		CategoryId: dto.CategoryId,
 		IsExpense:  dto.IsExpense,
-		Timestamp:  dto.Timestamp,
+		Date:       dto.Date,
 	}
 
 	return u
@@ -46,7 +46,7 @@ func (dto *TransactionUpdateDTO) ToEntity() *models.Transaction {
 		Amount:     dto.Amount,
 		CategoryId: dto.CategoryId,
 		IsExpense:  dto.IsExpense,
-		Timestamp:  dto.Timestamp,
+		Date:       dto.Date,
 	}
 
 	return u
@@ -58,7 +58,7 @@ func (dto *TransactionDTO) ToEntity() *models.Transaction {
 		Amount:     dto.Amount,
 		NoteId:     dto.NoteId,
 		CategoryId: dto.CategoryId,
-		Timestamp:  dto.Timestamp,
+		Date:       dto.Date,
 		IsExpense:  dto.IsExpense,
 	}
 
@@ -71,6 +71,6 @@ func (dto *TransactionDTO) FromEntity(transaction *models.Transaction) {
 	dto.Amount = transaction.Amount
 	dto.NoteId = transaction.NoteId
 	dto.CategoryId = transaction.CategoryId
-	dto.Timestamp = transaction.Timestamp
+	dto.Date = transaction.Date
 	dto.IsExpense = transaction.IsExpense
 }
