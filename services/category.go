@@ -13,7 +13,7 @@ type CategoryService interface {
 	Create(uuid.UUID, dto.CategoryCreateDTO) (*dto.CategoryDTO, error)
 	Update(categoryId uuid.UUID, categoryUpdateDto dto.CategoryUpdateDTO) (*dto.CategoryDTO, error)
 	Find(uuid.UUID) (*dto.CategoryDTO, error)
-	FindAllOfNote(uuid.UUID) ([]dto.CategoryDTO, error)
+	FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryDTO, error)
 	IsBelongsToNote(uuid.UUID, uuid.UUID) bool
 	Delete(uuid.UUID) error
 }
@@ -46,8 +46,8 @@ func (categorySvc *categoryService) Find(categoryId uuid.UUID) (*dto.CategoryDTO
 	return categorySvc.categoryRepository.Find(categoryId)
 }
 
-func (categorySvc *categoryService) FindAllOfNote(noteId uuid.UUID) ([]dto.CategoryDTO, error) {
-	return categorySvc.categoryRepository.FindAllOfNote(noteId)
+func (categorySvc *categoryService) FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryDTO, error) {
+	return categorySvc.categoryRepository.FindAllOfNote(noteId, isExpense)
 }
 
 func (categorySvc *categoryService) IsBelongsToNote(categoryId uuid.UUID, noteId uuid.UUID) bool {
