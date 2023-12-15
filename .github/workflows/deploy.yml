@@ -27,7 +27,7 @@ jobs:
         script: echo "Successfully connected to server"
 
     - name: Set up Go 1.21
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with: 
         go-version: 1.21
     
@@ -42,7 +42,7 @@ jobs:
         key: ${{ secrets.SERVER_KEY }}
         port: 
         source: "moneybackward-be"         
-        target: "/home/moneybackward/projects/moneybackward-be"    
+        target: "/home/ec2-user/projects/moneybackward-be"    
 
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
