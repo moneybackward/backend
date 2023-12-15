@@ -254,6 +254,12 @@ const docTemplate = `{
                         "name": "note_id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Is expense",
+                        "name": "is_expense",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -649,6 +655,9 @@ const docTemplate = `{
                 "budget": {
                     "type": "number"
                 },
+                "is_expense": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -672,6 +681,9 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "is_expense": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -691,6 +703,9 @@ const docTemplate = `{
             "properties": {
                 "budget": {
                     "type": "number"
+                },
+                "is_expense": {
+                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"
@@ -873,6 +888,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "string"
+                },
+                "is_expense": {
+                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"

@@ -3,6 +3,8 @@ definitions:
     properties:
       budget:
         type: number
+      is_expense:
+        type: boolean
       name:
         type: string
       priority:
@@ -18,6 +20,8 @@ definitions:
         type: string
       id:
         type: string
+      is_expense:
+        type: boolean
       name:
         type: string
       note_id:
@@ -31,6 +35,8 @@ definitions:
     properties:
       budget:
         type: number
+      is_expense:
+        type: boolean
       name:
         type: string
       priority:
@@ -151,6 +157,8 @@ definitions:
         type: string
       id:
         type: string
+      is_expense:
+        type: boolean
       name:
         type: string
       note:
@@ -370,6 +378,10 @@ paths:
         name: note_id
         required: true
         type: string
+      - description: Is expense
+        in: query
+        name: is_expense
+        type: boolean
       responses:
         "200":
           description: OK

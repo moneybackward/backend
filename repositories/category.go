@@ -67,7 +67,7 @@ func (u *categoryRepository) FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([
 	var categories []models.Category
 	query := u.DB.Where("note_id = ?", noteId)
 	if isExpense != nil {
-		query = query.Where("is_expense = ?", isExpense)
+		query = query.Where("is_expense = ?", *isExpense)
 	}
 
 	err := query.Find(&categories).Error
