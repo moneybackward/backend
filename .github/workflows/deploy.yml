@@ -15,10 +15,20 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout the repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+
+    - name: Check SSH connection to server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SERVER_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        port:
+        script: echo "Successfully connected to server"
 
     - name: Set up Go 1.21
-      uses: actions/setup-go@v1
+      uses: actions/setup-go@v2
       with: 
         go-version: 1.21
     
@@ -31,6 +41,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SERVER_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
         port: 
         source: "moneybackward-be"         
         target: "/home/moneybackward/projects/moneybackward-be"    
@@ -41,6 +52,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SERVER_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
         port:
         script:           
           systemctl --user restart ${{ secrets.SERVICE_NAME }}.service &&
