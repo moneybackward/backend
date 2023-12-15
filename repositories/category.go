@@ -11,7 +11,7 @@ type CategoryRepository interface {
 	Save(uuid.UUID, dto.CategoryCreateDTO) (*dto.CategoryDTO, error)
 	Update(categoryId uuid.UUID, categoryUpdateDto dto.CategoryUpdateDTO) (*dto.CategoryDTO, error)
 	Find(uuid.UUID) (*dto.CategoryDTO, error)
-	FindAllOfNote(uuid.UUID) ([]dto.CategoryDTO, error)
+	FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryDTO, error)
 	Delete(uuid.UUID) error
 }
 
@@ -63,9 +63,14 @@ func (u *categoryRepository) Find(categoryId uuid.UUID) (*dto.CategoryDTO, error
 	return &categoryDto, nil
 }
 
-func (u *categoryRepository) FindAllOfNote(noteId uuid.UUID) ([]dto.CategoryDTO, error) {
+func (u *categoryRepository) FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryDTO, error) {
 	var categories []models.Category
-	err := u.DB.Where("note_id = ?", noteId).Find(&categories).Error
+	query := u.DB.Where("note_id = ?", noteId)
+	if isExpense != nil {
+		query = query.Where("is_expense = ?", *isExpense)
+	}
+
+	err := query.Find(&categories).Error
 	if err != nil {
 		return nil, err
 	}

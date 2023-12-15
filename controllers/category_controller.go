@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -144,6 +145,7 @@ func (ctrl *categoryController) Update(ctx *gin.Context) {
 // @Security BearerAuth
 // @Router /notes/{note_id}/categories [get]
 // @Param note_id path string true "Note ID"
+// @Param is_expense query bool false "Is expense"
 // @Success 200 {object} []dto.CategoryDTO
 func (ctrl *categoryController) List(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
@@ -153,13 +155,24 @@ func (ctrl *categoryController) List(ctx *gin.Context) {
 		return
 	}
 
+	var isExpense *bool = nil
+	// optional is_expense param
+	if ctx.Query("is_expense") != "" {
+		isExpenseRaw, err := strconv.ParseBool(ctx.Query("is_expense"))
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		isExpense = &isExpenseRaw
+	}
+
 	noteId := uuid.MustParse(ctx.Param("note_id"))
 	isNoteBelongsToUser := ctrl.noteService.IsBelongsToUser(noteId, userId)
 	if !isNoteBelongsToUser {
 		ctx.AbortWithStatusJSON(http.StatusForbidden, "Note does not belong to the user")
 	}
 
-	categories, err := ctrl.categoryService.FindAllOfNote(noteId)
+	categories, err := ctrl.categoryService.FindAllOfNote(noteId, isExpense)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
