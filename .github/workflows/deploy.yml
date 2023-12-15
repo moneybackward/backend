@@ -23,7 +23,6 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SERVER_KEY }}
-        passphrase: ${{ secrets.PASSPHRASE }}
         port:
         script: echo "Successfully connected to server"
 
@@ -41,7 +40,6 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SERVER_KEY }}
-        passphrase: ${{ secrets.PASSPHRASE }}
         port: 
         source: "moneybackward-be"         
         target: "/home/moneybackward/projects/moneybackward-be"    
