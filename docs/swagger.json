@@ -130,7 +130,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Note"
+                            "$ref": "#/definitions/dto.NoteDTO"
                         }
                     }
                 }
@@ -862,111 +862,6 @@
                     "type": "string"
                 },
                 "password_confirmation": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Category": {
-            "type": "object",
-            "properties": {
-                "budget": {
-                    "type": "number"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "is_expense": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "note": {
-                    "$ref": "#/definitions/models.Note"
-                },
-                "note_id": {
-                    "type": "string"
-                },
-                "priority": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Note": {
-            "type": "object",
-            "properties": {
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Category"
-                    }
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "transactions": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Transaction"
-                    }
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/models.User"
-                },
-                "user_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Transaction": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "number"
-                },
-                "category": {
-                    "$ref": "#/definitions/models.Category"
-                },
-                "category_id": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "date": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "is_expense": {
-                    "type": "boolean"
-                },
-                "label": {
-                    "type": "string"
-                },
-                "note": {
-                    "$ref": "#/definitions/models.Note"
-                },
-                "note_id": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }

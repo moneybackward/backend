@@ -149,75 +149,6 @@ definitions:
     - password
     - password_confirmation
     type: object
-  models.Category:
-    properties:
-      budget:
-        type: number
-      created_at:
-        type: string
-      id:
-        type: string
-      is_expense:
-        type: boolean
-      name:
-        type: string
-      note:
-        $ref: '#/definitions/models.Note'
-      note_id:
-        type: string
-      priority:
-        type: integer
-      updated_at:
-        type: string
-    type: object
-  models.Note:
-    properties:
-      categories:
-        items:
-          $ref: '#/definitions/models.Category'
-        type: array
-      created_at:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      transactions:
-        items:
-          $ref: '#/definitions/models.Transaction'
-        type: array
-      updated_at:
-        type: string
-      user:
-        $ref: '#/definitions/models.User'
-      user_id:
-        type: string
-    type: object
-  models.Transaction:
-    properties:
-      amount:
-        type: number
-      category:
-        $ref: '#/definitions/models.Category'
-      category_id:
-        type: string
-      created_at:
-        type: string
-      date:
-        type: string
-      id:
-        type: string
-      is_expense:
-        type: boolean
-      label:
-        type: string
-      note:
-        $ref: '#/definitions/models.Note'
-      note_id:
-        type: string
-      updated_at:
-        type: string
-    type: object
   models.User:
     properties:
       created_at:
@@ -310,7 +241,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Note'
+            $ref: '#/definitions/dto.NoteDTO'
       security:
       - BearerAuth: []
       summary: Create a note

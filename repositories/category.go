@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
 	"gorm.io/gorm"
@@ -42,9 +43,14 @@ func (u *categoryRepository) Update(categoryId uuid.UUID, categoryUpdateDto dto.
 		return nil, err
 	}
 
+	nullableBudget := null.NewFloat(0, false)
+	if categoryUpdateDto.Budget != nil {
+		nullableBudget = null.FloatFromPtr(categoryUpdateDto.Budget)
+	}
+
 	category.Name = categoryUpdateDto.Name
 	category.Priority = categoryUpdateDto.Priority
-	category.Budget = categoryUpdateDto.Budget
+	category.Budget = nullableBudget
 	u.DB.Save(&category)
 	categoryDto := dto.CategoryDTO{}
 	categoryDto.FromEntity(category)

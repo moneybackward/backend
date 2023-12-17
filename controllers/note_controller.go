@@ -36,7 +36,7 @@ func NewNoteController() NoteController {
 // @Security BearerAuth
 // @Router /notes [post]
 // @Param note body dto.NoteCreateDTO true "Note"
-// @Success 201 {object} models.Note
+// @Success 201 {object} dto.NoteDTO
 func (noteCtrl *noteController) Add(ctx *gin.Context) {
 	userIdRaw, exists := ctx.Get("userId")
 	userId := userIdRaw.(uuid.UUID)

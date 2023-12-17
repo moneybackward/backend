@@ -42,7 +42,7 @@ jobs:
         key: ${{ secrets.SERVER_KEY }}
         port: 
         source: "moneybackward-be"         
-        target: "/home/ec2-user/projects/moneybackward-be"    
+        target: "/home/${{ secrets.USER }}/projects/moneybackward-be"    
 
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
@@ -50,7 +50,6 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SERVER_KEY }}
-        passphrase: ${{ secrets.PASSPHRASE }}
         port:
         script:           
           systemctl --user restart ${{ secrets.SERVICE_NAME }}.service &&
