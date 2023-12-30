@@ -34,7 +34,7 @@ jobs:
     - name: Build app 
       run: go build -o moneybackward-be main.go
 
-    - name: SCP to Ocean
+    - name: Copy Built App to Server
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOST }}
