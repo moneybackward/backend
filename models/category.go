@@ -11,7 +11,7 @@ type Category struct {
 	Priority  int        `json:"priority"`
 	Budget    null.Float `json:"budget" gorm:"default:null"`
 	NoteId    uuid.UUID  `json:"note_id"`
-	IsExpense bool       `json:"is_expense" gorm:"default:true; not null"`
+	IsExpense *bool      `json:"is_expense" gorm:"default:true; not null"`
 
 	Note Note `gorm:"foreignKey:NoteId"`
 }

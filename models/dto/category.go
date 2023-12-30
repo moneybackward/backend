@@ -10,7 +10,7 @@ type CategoryCreateDTO struct {
 	Name      string   `json:"name"`
 	Priority  int      `json:"priority"`
 	Budget    *float64 `json:"budget,omitempty"`
-	IsExpense bool     `json:"is_expense"`
+	IsExpense *bool    `json:"is_expense"`
 }
 
 type CategoryUpdateDTO CategoryCreateDTO

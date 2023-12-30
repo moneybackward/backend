@@ -12,7 +12,7 @@ type TransactionDTO struct {
 	Label     string    `json:"label"`
 	Amount    float64   `json:"amount"`
 	Date      time.Time `json:"date"`
-	IsExpense bool      `json:"is_expense"`
+	IsExpense *bool     `json:"is_expense"`
 
 	NoteId     uuid.UUID `json:"note_id"`
 	CategoryId uuid.UUID `json:"category_id"`
@@ -23,7 +23,7 @@ type TransactionCreateDTO struct {
 	Amount     float64   `json:"amount"`
 	CategoryId uuid.UUID `json:"category_id"`
 	Date       time.Time `json:"date"`
-	IsExpense  bool      `json:"is_expense"`
+	IsExpense  *bool     `json:"is_expense"`
 }
 
 type TransactionUpdateDTO TransactionCreateDTO
