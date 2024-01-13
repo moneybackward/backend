@@ -14,6 +14,7 @@ type CategoryRepository interface {
 	Find(uuid.UUID) (*dto.CategoryDTO, error)
 	FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryDTO, error)
 	Delete(uuid.UUID) error
+	GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error)
 }
 
 type categoryRepository struct {
@@ -94,4 +95,26 @@ func (u *categoryRepository) FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([
 
 func (u *categoryRepository) Delete(categoryId uuid.UUID) error {
 	return u.DB.Delete(&models.Category{}, categoryId).Error
+}
+
+func (u *categoryRepository) GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error) {
+	query := u.DB.Table("categories").
+		Select("categories.*, SUM(transactions.amount) as total, COUNT(transactions) as count").
+		Joins("INNER JOIN transactions ON transactions.category_id = categories.id").
+		Where("categories.note_id = ?", noteId)
+
+	if isExpense != nil {
+		query = query.Where("categories.is_expense = ?", *isExpense)
+	}
+
+	var categoryStatsDtos []dto.CategoryStatsDTO
+	err := query.Group("categories.id").
+		Find(&categoryStatsDtos).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return categoryStatsDtos, nil
 }

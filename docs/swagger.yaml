@@ -31,6 +31,31 @@ definitions:
       updated_at:
         type: string
     type: object
+  dto.CategoryStatsDTO:
+    properties:
+      budget:
+        type: number
+      count:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: string
+      is_expense:
+        type: boolean
+      name:
+        type: string
+      note_id:
+        type: string
+      priority:
+        type: integer
+      total:
+        type: number
+      updated_at:
+        type: string
+    type: object
   dto.CategoryUpdateDTO:
     properties:
       budget:
@@ -423,6 +448,32 @@ paths:
       summary: Update a category
       tags:
       - categories
+  /notes/{note_id}/statistics/categories:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Note ID
+        in: path
+        name: note_id
+        required: true
+        type: string
+      - description: Is expense
+        in: query
+        name: is_expense
+        type: boolean
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.CategoryStatsDTO'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get categories statistic
+      tags:
+      - statistics
   /notes/{note_id}/transactions:
     get:
       parameters:

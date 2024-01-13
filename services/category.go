@@ -16,6 +16,7 @@ type CategoryService interface {
 	FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryDTO, error)
 	IsBelongsToNote(uuid.UUID, uuid.UUID) bool
 	Delete(uuid.UUID) error
+	GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error)
 }
 
 type categoryService struct {
@@ -62,4 +63,8 @@ func (categorySvc *categoryService) IsBelongsToNote(categoryId uuid.UUID, noteId
 
 func (categorySvc *categoryService) Delete(categoryId uuid.UUID) error {
 	return categorySvc.categoryRepository.Delete(categoryId)
+}
+
+func (categorySvc *categoryService) GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error) {
+	return categorySvc.categoryRepository.GetStats(noteId, isExpense)
 }

@@ -431,6 +431,48 @@ const docTemplate = `{
                 }
             }
         },
+        "/notes/{note_id}/statistics/categories": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "statistics"
+                ],
+                "summary": "Get categories statistic",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Note ID",
+                        "name": "note_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Is expense",
+                        "name": "is_expense",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.CategoryStatsDTO"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/notes/{note_id}/transactions": {
             "get": {
                 "security": [
@@ -692,6 +734,44 @@ const docTemplate = `{
                 },
                 "priority": {
                     "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CategoryStatsDTO": {
+            "type": "object",
+            "properties": {
+                "budget": {
+                    "type": "number"
+                },
+                "count": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_expense": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "note_id": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "number"
                 },
                 "updated_at": {
                     "type": "string"

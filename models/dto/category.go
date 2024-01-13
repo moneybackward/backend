@@ -21,6 +21,12 @@ type CategoryDTO struct {
 	NoteId uuid.UUID `json:"note_id"`
 }
 
+type CategoryStatsDTO struct {
+	CategoryDTO
+	Total float64 `json:"total"`
+	Count int     `json:"count"`
+}
+
 func (dto *CategoryCreateDTO) ToEntity() models.Category {
 	nullableBudget := null.NewFloat(0, false)
 	if dto.Budget != nil {
