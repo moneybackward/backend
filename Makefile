@@ -24,6 +24,6 @@ build-and-run: build
 	${info ****** Building and running ******}
 	./$(OUTPUT_DIR)/$(BINARY_NAME)
 
-dev:
+dev: gendocs
 	${info ****** Running dev ******}
 	go run main.go
