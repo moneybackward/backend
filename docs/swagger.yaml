@@ -116,6 +116,8 @@ definitions:
     properties:
       amount:
         type: number
+      category:
+        $ref: '#/definitions/dto.CategoryDTO'
       category_id:
         type: string
       created_at:

@@ -74,4 +74,5 @@ func (dto *TransactionDTO) FromEntity(transaction *models.Transaction) {
 	dto.CategoryId = transaction.CategoryId
 	dto.Date = transaction.Date
 	dto.IsExpense = transaction.IsExpense
+	dto.Category.FromEntity(transaction.Category)
 }

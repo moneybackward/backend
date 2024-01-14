@@ -870,6 +870,9 @@ const docTemplate = `{
                 "amount": {
                     "type": "number"
                 },
+                "category": {
+                    "$ref": "#/definitions/dto.CategoryDTO"
+                },
                 "category_id": {
                     "type": "string"
                 },

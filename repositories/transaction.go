@@ -66,8 +66,8 @@ func (u *transactionRepository) Find(transactionId uuid.UUID) (*dto.TransactionD
 
 func (u *transactionRepository) FindAllOfNote(noteId uuid.UUID) ([]dto.TransactionDTO, error) {
 	var transactions []models.Transaction
-	err := u.DB.Where("Transaction.note_id = ?", noteId).
-		Joins("Category").
+	err := u.DB.Joins("Category").
+		Where("transactions.note_id = ?", noteId).
 		Order("date DESC").
 		Find(&transactions).Error
 
