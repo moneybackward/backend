@@ -697,6 +697,9 @@ const docTemplate = `{
                 "budget": {
                     "type": "number"
                 },
+                "color": {
+                    "type": "string"
+                },
                 "is_expense": {
                     "type": "boolean"
                 },
@@ -713,6 +716,9 @@ const docTemplate = `{
             "properties": {
                 "budget": {
                     "type": "number"
+                },
+                "color": {
+                    "type": "string"
                 },
                 "created_at": {
                     "type": "string"
@@ -745,6 +751,9 @@ const docTemplate = `{
             "properties": {
                 "budget": {
                     "type": "number"
+                },
+                "color": {
+                    "type": "string"
                 },
                 "count": {
                     "type": "integer"
@@ -783,6 +792,9 @@ const docTemplate = `{
             "properties": {
                 "budget": {
                     "type": "number"
+                },
+                "color": {
+                    "type": "string"
                 },
                 "is_expense": {
                     "type": "boolean"

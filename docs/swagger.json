@@ -686,6 +686,9 @@
                 "budget": {
                     "type": "number"
                 },
+                "color": {
+                    "type": "string"
+                },
                 "is_expense": {
                     "type": "boolean"
                 },
@@ -702,6 +705,9 @@
             "properties": {
                 "budget": {
                     "type": "number"
+                },
+                "color": {
+                    "type": "string"
                 },
                 "created_at": {
                     "type": "string"
@@ -734,6 +740,9 @@
             "properties": {
                 "budget": {
                     "type": "number"
+                },
+                "color": {
+                    "type": "string"
                 },
                 "count": {
                     "type": "integer"
@@ -772,6 +781,9 @@
             "properties": {
                 "budget": {
                     "type": "number"
+                },
+                "color": {
+                    "type": "string"
                 },
                 "is_expense": {
                     "type": "boolean"

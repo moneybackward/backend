@@ -12,6 +12,7 @@ type Category struct {
 	Budget    null.Float `json:"budget" gorm:"default:null"`
 	NoteId    uuid.UUID  `json:"note_id"`
 	IsExpense *bool      `json:"is_expense" gorm:"default:true; not null"`
+	Color     string     `json:"color" gorm:"default:'#000000'"`
 
 	Note         Note          `gorm:"foreignKey:NoteId"`
 	Transactions []Transaction `gorm:"foreignKey:CategoryId"`

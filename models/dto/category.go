@@ -11,6 +11,7 @@ type CategoryCreateDTO struct {
 	Priority  int      `json:"priority"`
 	Budget    *float64 `json:"budget,omitempty"`
 	IsExpense *bool    `json:"is_expense"`
+	Color     string   `json:"color"`
 }
 
 type CategoryUpdateDTO CategoryCreateDTO
@@ -37,6 +38,7 @@ func (dto *CategoryCreateDTO) ToEntity() models.Category {
 		Budget:    nullableBudget,
 		Priority:  dto.Priority,
 		IsExpense: dto.IsExpense,
+		Color:     dto.Color,
 	}
 }
 
@@ -51,6 +53,7 @@ func (dto *CategoryUpdateDTO) ToEntity() models.Category {
 		Budget:    nullableBudget,
 		Priority:  dto.Priority,
 		IsExpense: dto.IsExpense,
+		Color:     dto.Color,
 	}
 }
 
@@ -66,6 +69,7 @@ func (dto *CategoryDTO) ToEntity() models.Category {
 		Priority:  dto.Priority,
 		IsExpense: dto.IsExpense,
 		Budget:    nullableBudget,
+		Color:     dto.Color,
 	}
 }
 
@@ -81,6 +85,7 @@ func (dto *CategoryDTO) FromEntity(category models.Category) {
 	dto.Budget = budget
 	dto.NoteId = category.NoteId
 	dto.IsExpense = category.IsExpense
+	dto.Color = category.Color
 }
 
 func (dto *CategoryDTO) FromCreateDto(createDto CategoryCreateDTO) {
@@ -88,4 +93,5 @@ func (dto *CategoryDTO) FromCreateDto(createDto CategoryCreateDTO) {
 	dto.Priority = createDto.Priority
 	dto.Budget = createDto.Budget
 	dto.IsExpense = createDto.IsExpense
+	dto.Color = createDto.Color
 }

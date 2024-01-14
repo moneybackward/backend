@@ -3,6 +3,8 @@ definitions:
     properties:
       budget:
         type: number
+      color:
+        type: string
       is_expense:
         type: boolean
       name:
@@ -14,6 +16,8 @@ definitions:
     properties:
       budget:
         type: number
+      color:
+        type: string
       created_at:
         type: string
       deleted_at:
@@ -35,6 +39,8 @@ definitions:
     properties:
       budget:
         type: number
+      color:
+        type: string
       count:
         type: integer
       created_at:
@@ -60,6 +66,8 @@ definitions:
     properties:
       budget:
         type: number
+      color:
+        type: string
       is_expense:
         type: boolean
       name:
