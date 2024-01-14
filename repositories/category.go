@@ -100,6 +100,7 @@ func (u *categoryRepository) Delete(categoryId uuid.UUID) error {
 func (u *categoryRepository) GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error) {
 	query := u.DB.Table("categories").
 		Select("categories.*, SUM(transactions.amount) as total, COUNT(transactions) as count").
+		Order("total DESC").
 		Joins("INNER JOIN transactions ON transactions.category_id = categories.id").
 		Where("categories.note_id = ?", noteId)
 
