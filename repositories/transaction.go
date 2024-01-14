@@ -66,7 +66,10 @@ func (u *transactionRepository) Find(transactionId uuid.UUID) (*dto.TransactionD
 
 func (u *transactionRepository) FindAllOfNote(noteId uuid.UUID) ([]dto.TransactionDTO, error) {
 	var transactions []models.Transaction
-	err := u.DB.Where("note_id = ?", noteId).Find(&transactions).Error
+	err := u.DB.Where("note_id = ?", noteId).
+		Order("date DESC").
+		Find(&transactions).Error
+
 	if err != nil {
 		return nil, err
 	}
