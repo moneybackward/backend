@@ -53,6 +53,7 @@ func (u *categoryRepository) Update(categoryId uuid.UUID, categoryUpdateDto dto.
 	category.Priority = categoryUpdateDto.Priority
 	category.Budget = nullableBudget
 	category.IsExpense = categoryUpdateDto.IsExpense
+	category.Color = categoryUpdateDto.Color
 	u.DB.Save(&category)
 	categoryDto := dto.CategoryDTO{}
 	categoryDto.FromEntity(category)
