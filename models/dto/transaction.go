@@ -14,8 +14,9 @@ type TransactionDTO struct {
 	Date      time.Time `json:"date"`
 	IsExpense *bool     `json:"is_expense"`
 
-	NoteId     uuid.UUID `json:"note_id"`
-	CategoryId uuid.UUID `json:"category_id"`
+	NoteId     uuid.UUID   `json:"note_id"`
+	CategoryId uuid.UUID   `json:"category_id"`
+	Category   CategoryDTO `json:"category"`
 }
 
 type TransactionCreateDTO struct {
