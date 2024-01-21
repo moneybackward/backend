@@ -107,7 +107,8 @@ func (u *categoryRepository) GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.
 	query := u.DB.Table("categories").
 		Select("categories.*, SUM(transactions.amount) as total, COUNT(transactions) as count, SUM(transactions.amount) / categories.budget * 100 as percentage").
 		Joins("INNER JOIN transactions ON transactions.category_id = categories.id").
-		Where("categories.note_id = ?", noteId)
+		Where("categories.note_id = ?", noteId).
+		Where("categories.deleted_at IS NULL")
 
 	if isExpense != nil {
 		query = query.Where("categories.is_expense = ?", *isExpense)
@@ -115,7 +116,7 @@ func (u *categoryRepository) GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.
 
 	var categoryStatsDtos []dto.CategoryStatsDTO
 	err := query.Group("categories.id").
-		Order("categories.percentage ASC").
+		Order("percentage DESC").
 		Find(&categoryStatsDtos).
 		Error
 
