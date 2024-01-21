@@ -79,7 +79,12 @@ func (u *categoryRepository) FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([
 		query = query.Where("is_expense = ?", *isExpense)
 	}
 
-	err := query.Find(&categories).Error
+	err := query.
+		Order("priority ASC").
+		Order("name ASC").
+		Order("created_at DESC").
+		Find(&categories).Error
+
 	if err != nil {
 		return nil, err
 	}

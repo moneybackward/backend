@@ -70,6 +70,7 @@ func (u *transactionRepository) FindAllOfNote(noteId uuid.UUID) ([]dto.Transacti
 	err := u.DB.Joins("Category").
 		Where("transactions.note_id = ?", noteId).
 		Order("date DESC").
+		Order("created_at DESC").
 		Find(&transactions).Error
 
 	if err != nil {
