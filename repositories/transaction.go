@@ -46,6 +46,7 @@ func (u *transactionRepository) Update(transactionId uuid.UUID, transactionUpdat
 	transaction.Amount = transactionUpdate.Amount
 	transaction.CategoryId = transactionUpdate.CategoryId
 	transaction.IsExpense = transactionUpdate.IsExpense
+	transaction.Date = transactionUpdate.Date
 	u.DB.Save(&transaction)
 	transactionDto := dto.TransactionDTO{}
 	transactionDto.FromEntity(&transaction)
