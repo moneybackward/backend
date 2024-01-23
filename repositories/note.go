@@ -48,6 +48,7 @@ func (noteRepo *noteRepository) Update(noteId uuid.UUID, noteUpdate *dto.NoteUpd
 		return nil, err
 	}
 	note.Name = noteUpdate.Name
+	note.CurrencyCode = noteUpdate.CurrencyCode
 	noteRepo.DB.Save(&note)
 	noteDto := &dto.NoteDTO{}
 	noteDto.FromEntity(&note)
