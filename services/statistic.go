@@ -5,10 +5,11 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models/dto"
+	"github.com/moneybackward/backend/utils"
 )
 
 type StatisticService interface {
-	Categories(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error)
+	Categories(noteId uuid.UUID, isExpense *bool, dateFilter *utils.DateFilter) ([]dto.CategoryStatsDTO, error)
 }
 
 type statisticService struct {
@@ -27,6 +28,6 @@ func NewStatisticService() StatisticService {
 	return statisticServiceInstance
 }
 
-func (statisticSvc *statisticService) Categories(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error) {
-	return statisticSvc.categoryService.GetStats(noteId, isExpense)
+func (statisticSvc *statisticService) Categories(noteId uuid.UUID, isExpense *bool, dateFilter *utils.DateFilter) ([]dto.CategoryStatsDTO, error) {
+	return statisticSvc.categoryService.GetStats(noteId, isExpense, dateFilter)
 }

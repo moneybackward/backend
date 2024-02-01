@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
+	"github.com/moneybackward/backend/utils"
 	"github.com/rs/zerolog/log"
 )
 
@@ -16,7 +17,7 @@ type CategoryService interface {
 	FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryDTO, error)
 	IsBelongsToNote(uuid.UUID, uuid.UUID) bool
 	Delete(uuid.UUID) error
-	GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error)
+	GetStats(noteId uuid.UUID, isExpense *bool, dateFilter *utils.DateFilter) ([]dto.CategoryStatsDTO, error)
 }
 
 type categoryService struct {
@@ -65,6 +66,6 @@ func (categorySvc *categoryService) Delete(categoryId uuid.UUID) error {
 	return categorySvc.categoryRepository.Delete(categoryId)
 }
 
-func (categorySvc *categoryService) GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error) {
-	return categorySvc.categoryRepository.GetStats(noteId, isExpense)
+func (categorySvc *categoryService) GetStats(noteId uuid.UUID, isExpense *bool, dateFilter *utils.DateFilter) ([]dto.CategoryStatsDTO, error) {
+	return categorySvc.categoryRepository.GetStats(noteId, isExpense, dateFilter)
 }

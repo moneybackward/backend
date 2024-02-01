@@ -5,6 +5,7 @@ import (
 	"github.com/guregu/null"
 	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
+	"github.com/moneybackward/backend/utils"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +15,7 @@ type CategoryRepository interface {
 	Find(uuid.UUID) (*dto.CategoryDTO, error)
 	FindAllOfNote(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryDTO, error)
 	Delete(uuid.UUID) error
-	GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error)
+	GetStats(noteId uuid.UUID, isExpense *bool, dateFilter *utils.DateFilter) ([]dto.CategoryStatsDTO, error)
 }
 
 type categoryRepository struct {
@@ -103,7 +104,7 @@ func (u *categoryRepository) Delete(categoryId uuid.UUID) error {
 	return u.DB.Delete(&models.Category{}, categoryId).Error
 }
 
-func (u *categoryRepository) GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.CategoryStatsDTO, error) {
+func (u *categoryRepository) GetStats(noteId uuid.UUID, isExpense *bool, dateFilter *utils.DateFilter) ([]dto.CategoryStatsDTO, error) {
 	query := u.DB.Table("categories").
 		Select("categories.*, SUM(transactions.amount) as total, COUNT(transactions) as count, (CASE WHEN categories.budget IS NOT NULL AND categories.budget != 0 THEN SUM(transactions.amount) / categories.budget * 100 ELSE 0 END) as percentage").
 		Where("categories.deleted_at IS NULL").
@@ -113,6 +114,10 @@ func (u *categoryRepository) GetStats(noteId uuid.UUID, isExpense *bool) ([]dto.
 
 	if isExpense != nil {
 		query = query.Where("categories.is_expense = ?", *isExpense)
+	}
+
+	if dateFilter != nil {
+		query = dateFilter.WhereTransaction(query)
 	}
 
 	var categoryStatsDtos []dto.CategoryStatsDTO
