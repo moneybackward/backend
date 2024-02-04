@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"log/slog"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models"
@@ -17,6 +18,7 @@ type UserRepository interface {
 	Find(uuid.UUID) (*dto.UserDTO, error)
 	FindByEmail(string) (*dto.UserDTO, error)
 	Delete(uuid.UUID) error
+	Login(userId uuid.UUID) error
 }
 
 type userRepository struct {
@@ -81,4 +83,8 @@ func (userRepo *userRepository) FindByEmail(email string) (*dto.UserDTO, error) 
 
 func (userRepo *userRepository) Delete(userId uuid.UUID) error {
 	return userRepo.DB.Delete(&models.User{}, userId).Error
+}
+
+func (userRepo *userRepository) Login(userId uuid.UUID) error {
+	return userRepo.DB.Model(&models.User{}).Where("id = ?", userId).Update("last_login", time.Now()).Error
 }

@@ -3,6 +3,7 @@ package models
 import (
 	"html"
 	"strings"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -10,9 +11,10 @@ import (
 
 type User struct {
 	Base
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Name      string     `json:"name"`
+	Email     string     `json:"email"`
+	Password  string     `json:"password"`
+	LastLogin *time.Time `json:"last_login"`
 }
 
 func (u *User) BeforeSave(tx *gorm.DB) (err error) {

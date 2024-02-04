@@ -107,5 +107,11 @@ func (userSvc *userService) Login(user *dto.UserLoginDTO) (string, error) {
 		return "", err
 	}
 
+	loginError := userSvc.userRepository.Login(userDTO.Id)
+	if loginError != nil {
+		slog.Error("Failed to update last login")
+		return "", loginError
+	}
+
 	return token, nil
 }

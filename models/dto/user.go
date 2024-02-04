@@ -1,6 +1,8 @@
 package dto
 
 import (
+	"time"
+
 	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/utils/errors"
 	"golang.org/x/crypto/bcrypt"
@@ -8,16 +10,18 @@ import (
 
 type UserDTO struct {
 	BaseDTO
-	Name     string `json:"name" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"-"`
+	Name      string     `json:"name" binding:"required"`
+	Email     string     `json:"email" binding:"required"`
+	Password  string     `json:"-"`
+	LastLogin *time.Time `json:"last_login"`
 }
 
 func (dto *UserDTO) ToEntity() (*models.User, error) {
 	u := &models.User{
-		Name:     dto.Name,
-		Email:    dto.Email,
-		Password: dto.Password,
+		Name:      dto.Name,
+		Email:     dto.Email,
+		Password:  dto.Password,
+		LastLogin: dto.LastLogin,
 	}
 
 	return u, nil
@@ -28,6 +32,7 @@ func (dto *UserDTO) FromEntity(user *models.User) {
 	dto.Name = user.Name
 	dto.Email = user.Email
 	dto.Password = user.Password
+	dto.LastLogin = user.LastLogin
 }
 
 type UserRegisterDTO struct {
