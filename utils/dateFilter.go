@@ -76,7 +76,7 @@ func alignDate(date *time.Time, isStart bool) *time.Time {
 func NewDateFilter(dateStartRaw string, dateEndRaw string) DateFilter {
 	var dateStart *time.Time = nil
 	var dateEnd *time.Time = nil
-	var err error = nil
+	var err error
 
 	if dateStartRaw != "" {
 		dateStart, err = parseDate(dateStartRaw)
