@@ -503,6 +503,24 @@ const docTemplate = `{
                         "name": "note_id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Is expense",
+                        "name": "is_expense",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Date start",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Date end",
+                        "name": "date_end",
+                        "in": "query"
                     }
                 ],
                 "responses": {

@@ -12,7 +12,7 @@ import (
 type TransactionService interface {
 	Create(noteId uuid.UUID, transactionCreate *dto.TransactionCreateDTO) (*dto.TransactionDTO, error)
 	Update(transactionId uuid.UUID, transactionUpdate dto.TransactionUpdateDTO) (*dto.TransactionDTO, error)
-	FindAllOfNote(noteId uuid.UUID, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error)
+	FindAllOfNote(noteId uuid.UUID, isExpense *bool, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error)
 	Find(transactionId uuid.UUID) (*dto.TransactionDTO, error)
 	Delete(uuid.UUID) error
 }
@@ -45,8 +45,8 @@ func (transactionSvc *transactionService) Find(transactionId uuid.UUID) (*dto.Tr
 	return transactionSvc.transactionRepository.Find(transactionId)
 }
 
-func (transactionSvc *transactionService) FindAllOfNote(noteId uuid.UUID, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error) {
-	return transactionSvc.transactionRepository.FindAllOfNote(noteId, dateFilter)
+func (transactionSvc *transactionService) FindAllOfNote(noteId uuid.UUID, isExpense *bool, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error) {
+	return transactionSvc.transactionRepository.FindAllOfNote(noteId, isExpense, dateFilter)
 }
 
 func (transactionSvc *transactionService) Delete(transactionId uuid.UUID) error {

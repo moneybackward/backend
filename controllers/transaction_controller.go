@@ -2,11 +2,13 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/services"
+	"github.com/moneybackward/backend/utils"
 	"github.com/rs/zerolog/log"
 )
 
@@ -64,10 +66,25 @@ func (ctrl *transactionController) Add(ctx *gin.Context) {
 // @Security BearerAuth
 // @Router /notes/{note_id}/transactions [get]
 // @Param note_id path string true "Note ID"
+// @Param is_expense query bool false "Is expense"
+// @Param date_start query string false "Date start"
+// @Param date_end query string false "Date end"
 // @Success 200 {object} []dto.TransactionDTO
 func (ctrl *transactionController) List(ctx *gin.Context) {
+	// optional is_expense param
+	var isExpense *bool = nil
+	if ctx.Query("is_expense") != "" {
+		isExpenseRaw, err := strconv.ParseBool(ctx.Query("is_expense"))
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		isExpense = &isExpenseRaw
+	}
+
+	dateFilter := utils.NewDateFilter(ctx.Query("date_start"), ctx.Query("date_end"))
 	noteId := uuid.MustParse(ctx.Param("note_id"))
-	transactions, err := ctrl.transactionService.FindAllOfNote(noteId)
+	transactions, err := ctrl.transactionService.FindAllOfNote(noteId, isExpense, &dateFilter)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

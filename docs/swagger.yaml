@@ -502,6 +502,18 @@ paths:
         name: note_id
         required: true
         type: string
+      - description: Is expense
+        in: query
+        name: is_expense
+        type: boolean
+      - description: Date start
+        in: query
+        name: date_start
+        type: string
+      - description: Date end
+        in: query
+        name: date_end
+        type: string
       responses:
         "200":
           description: OK

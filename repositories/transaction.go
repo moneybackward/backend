@@ -12,7 +12,7 @@ type TransactionRepository interface {
 	Save(noteId uuid.UUID, transactionCreate *dto.TransactionCreateDTO) (*dto.TransactionDTO, error)
 	Update(transactionId uuid.UUID, transactionUpdate dto.TransactionUpdateDTO) (*dto.TransactionDTO, error)
 	Find(transactionId uuid.UUID) (*dto.TransactionDTO, error)
-	FindAllOfNote(noteId uuid.UUID, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error)
+	FindAllOfNote(noteId uuid.UUID, isExpense *bool, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error)
 	Delete(uuid.UUID) error
 }
 
@@ -66,10 +66,14 @@ func (u *transactionRepository) Find(transactionId uuid.UUID) (*dto.TransactionD
 	return &transactionDto, nil
 }
 
-func (u *transactionRepository) FindAllOfNote(noteId uuid.UUID, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error) {
+func (u *transactionRepository) FindAllOfNote(noteId uuid.UUID, isExpense *bool, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error) {
 	var transactions []models.Transaction
 	query := u.DB.Joins("Category").
 		Where("transactions.note_id = ?", noteId)
+
+	if isExpense != nil {
+		query = query.Where("transactions.is_expense = ?", *isExpense)
+	}
 
 	if dateFilter != nil {
 		query = dateFilter.WhereBetween(query, "transactions.date")
