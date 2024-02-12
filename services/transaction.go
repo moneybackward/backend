@@ -6,12 +6,13 @@ import (
 	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models/dto"
 	"github.com/moneybackward/backend/repositories"
+	"github.com/moneybackward/backend/utils"
 )
 
 type TransactionService interface {
 	Create(noteId uuid.UUID, transactionCreate *dto.TransactionCreateDTO) (*dto.TransactionDTO, error)
 	Update(transactionId uuid.UUID, transactionUpdate dto.TransactionUpdateDTO) (*dto.TransactionDTO, error)
-	FindAllOfNote(noteId uuid.UUID) ([]dto.TransactionDTO, error)
+	FindAllOfNote(noteId uuid.UUID, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error)
 	Find(transactionId uuid.UUID) (*dto.TransactionDTO, error)
 	Delete(uuid.UUID) error
 }
@@ -44,8 +45,8 @@ func (transactionSvc *transactionService) Find(transactionId uuid.UUID) (*dto.Tr
 	return transactionSvc.transactionRepository.Find(transactionId)
 }
 
-func (transactionSvc *transactionService) FindAllOfNote(noteId uuid.UUID) ([]dto.TransactionDTO, error) {
-	return transactionSvc.transactionRepository.FindAllOfNote(noteId)
+func (transactionSvc *transactionService) FindAllOfNote(noteId uuid.UUID, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error) {
+	return transactionSvc.transactionRepository.FindAllOfNote(noteId, dateFilter)
 }
 
 func (transactionSvc *transactionService) Delete(transactionId uuid.UUID) error {

@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -55,10 +54,8 @@ func (ctrl *statisticController) Categories(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusForbidden, "Note does not belong to the user")
 	}
 
-	var isExpense *bool = nil
-	var dateFilter utils.DateFilter = utils.NewDateFilter(nil, nil)
-
 	// optional is_expense param
+	var isExpense *bool = nil
 	if ctx.Query("is_expense") != "" {
 		isExpenseRaw, err := strconv.ParseBool(ctx.Query("is_expense"))
 		if err != nil {
@@ -68,29 +65,7 @@ func (ctrl *statisticController) Categories(ctx *gin.Context) {
 		isExpense = &isExpenseRaw
 	}
 
-	if dateStartRaw := ctx.Query("date_start"); dateStartRaw != "" {
-		layout := "2006-01-02"
-		dateStart, err := time.Parse(layout, dateStartRaw)
-		// make the date start at 00:00:00
-		dateStart = time.Date(dateStart.Year(), dateStart.Month(), dateStart.Day(), 0, 0, 0, 0, dateStart.Location())
-		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		dateFilter.Start = &dateStart
-	}
-
-	if dateEndRaw := ctx.Query("date_end"); dateEndRaw != "" {
-		layout := "2006-01-02"
-		dateEnd, err := time.Parse(layout, dateEndRaw)
-		// make the date end at 23:59:59
-		dateEnd = time.Date(dateEnd.Year(), dateEnd.Month(), dateEnd.Day(), 23, 59, 59, 0, dateEnd.Location())
-		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		dateFilter.End = &dateEnd
-	}
+	dateFilter := utils.NewDateFilter(ctx.Query("date_start"), ctx.Query("date_end"))
 
 	categoriesStats, err := ctrl.statisticService.Categories(noteId, isExpense, &dateFilter)
 	if err != nil {

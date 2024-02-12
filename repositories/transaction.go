@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/moneybackward/backend/models"
 	"github.com/moneybackward/backend/models/dto"
+	"github.com/moneybackward/backend/utils"
 	"gorm.io/gorm"
 )
 
@@ -11,7 +12,7 @@ type TransactionRepository interface {
 	Save(noteId uuid.UUID, transactionCreate *dto.TransactionCreateDTO) (*dto.TransactionDTO, error)
 	Update(transactionId uuid.UUID, transactionUpdate dto.TransactionUpdateDTO) (*dto.TransactionDTO, error)
 	Find(transactionId uuid.UUID) (*dto.TransactionDTO, error)
-	FindAllOfNote(noteId uuid.UUID) ([]dto.TransactionDTO, error)
+	FindAllOfNote(noteId uuid.UUID, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error)
 	Delete(uuid.UUID) error
 }
 
@@ -65,10 +66,16 @@ func (u *transactionRepository) Find(transactionId uuid.UUID) (*dto.TransactionD
 	return &transactionDto, nil
 }
 
-func (u *transactionRepository) FindAllOfNote(noteId uuid.UUID) ([]dto.TransactionDTO, error) {
+func (u *transactionRepository) FindAllOfNote(noteId uuid.UUID, dateFilter *utils.DateFilter) ([]dto.TransactionDTO, error) {
 	var transactions []models.Transaction
-	err := u.DB.Joins("Category").
-		Where("transactions.note_id = ?", noteId).
+	query := u.DB.Joins("Category").
+		Where("transactions.note_id = ?", noteId)
+
+	if dateFilter != nil {
+		query = dateFilter.WhereBetween(query, "transactions.date")
+	}
+
+	err := query.
 		Order("date DESC").
 		Order("created_at DESC").
 		Find(&transactions).Error

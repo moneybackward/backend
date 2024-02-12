@@ -117,7 +117,7 @@ func (u *categoryRepository) GetStats(noteId uuid.UUID, isExpense *bool, dateFil
 	}
 
 	if dateFilter != nil {
-		query = dateFilter.WhereTransaction(query)
+		query = dateFilter.WhereBetween(query, "transactions.date")
 	}
 
 	var categoryStatsDtos []dto.CategoryStatsDTO
